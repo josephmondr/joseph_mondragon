@@ -1,0 +1,343 @@
+<title>ClipEngine · Estudio de Contenido IA</title>
+<style>
+  /* ── CLIPENGINE — identidad: sala de edición cinematográfica.
+     Tema único deliberado: negro profundo + rojo REC + timecodes mono. ── */
+  :root{
+    --k0:#0B0B0D; --k1:#121215; --k2:#18181C; --k3:#222228;
+    --line:#2A2A31; --line2:#1E1E24;
+    --t0:#F4F3F1; --t1:#A9A8A4; --t2:#6E6D6A;
+    --rec:#E84A3F; --rec-deep:#B3352C; --rec-dim:rgba(232,74,63,.13);
+    --cy:#E8C15A; --good:#77BE8E;
+    --fd:"Didot","Bodoni MT",Georgia,serif;
+    --fb:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --fm:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{background:var(--k0);color:var(--t0);font-family:var(--fb);font-size:15px;line-height:1.55}
+  ::selection{background:var(--rec);color:#fff}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+  button:focus-visible{outline:2px solid var(--rec);outline-offset:2px}
+  .wrap{max-width:1020px;margin:0 auto;padding:0 18px 90px}
+
+  header{padding:26px 0 8px}
+  .topline{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+  h1{font-family:var(--fd);font-weight:400;font-size:clamp(26px,5vw,34px);letter-spacing:.4px}
+  h1 .dot{color:var(--rec)}
+  .sub{color:var(--t1);font-size:13px;margin-top:3px;max-width:60ch}
+  .rec-chip{font-family:var(--fm);font-size:10.5px;letter-spacing:.14em;color:var(--rec);
+    border:1px solid var(--rec-deep);padding:5px 10px;border-radius:999px;display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
+  .rec-chip i{width:8px;height:8px;border-radius:50%;background:var(--rec);animation:rb 1.2s steps(1) infinite}
+  @keyframes rb{50%{opacity:.25}}
+
+  .stepbar{display:flex;gap:0;margin:22px 0 6px;font-family:var(--fm);font-size:10.5px;letter-spacing:.1em;color:var(--t2)}
+  .stepbar span{flex:1;text-align:center;padding-bottom:9px;border-bottom:2px solid var(--line2);transition:.3s}
+  .stepbar span.on{color:var(--rec);border-color:var(--rec)}
+
+  .sec-title{font-family:var(--fd);font-weight:400;font-size:21px;margin:24px 0 4px}
+  .sec-sub{color:var(--t1);font-size:13.5px;margin-bottom:14px;max-width:62ch}
+
+  /* ── footage cards ── */
+  .footage{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+  .clipcard{position:relative;text-align:left;border:1px solid var(--line);border-radius:14px;overflow:hidden;
+    background:var(--k1);transition:.18s;width:100%}
+  .clipcard:hover{border-color:var(--rec-deep);transform:translateY(-2px)}
+  .clipcard[aria-pressed="true"]{border-color:var(--rec);box-shadow:0 0 0 1px var(--rec)}
+  .thumb{height:130px;position:relative;display:flex;align-items:flex-end;padding:10px}
+  .thumb.t1{background:linear-gradient(160deg,#3d2a1e 0%,#1a1412 55%,#0e0c0b 100%)}
+  .thumb.t2{background:linear-gradient(160deg,#1e2a3d 0%,#12161a 55%,#0b0d0e 100%)}
+  .thumb.t3{background:linear-gradient(160deg,#33203a 0%,#171218 55%,#0d0b0e 100%)}
+  .thumb::before{content:"";position:absolute;inset:0;
+    background:repeating-linear-gradient(0deg,transparent 0 3px,rgba(255,255,255,.014) 3px 4px)}
+  .thumb .tc{font-family:var(--fm);font-size:10px;color:rgba(244,243,241,.75);letter-spacing:.08em}
+  .thumb .play{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+    width:44px;height:44px;border-radius:50%;background:rgba(11,11,13,.55);border:1px solid rgba(244,243,241,.3);
+    display:grid;place-items:center;font-size:15px;color:var(--t0)}
+  .cmeta{padding:12px 14px}
+  .cmeta .nm{font-weight:600;font-size:14px;line-height:1.35}
+  .cmeta .in{font-size:11.5px;color:var(--t2);margin-top:4px;font-family:var(--fm)}
+
+  .process-btn{display:block;width:100%;margin-top:16px;padding:15px;border-radius:13px;
+    background:linear-gradient(90deg,var(--rec),var(--rec-deep));color:#fff;font-weight:700;font-size:15px;transition:.15s}
+  .process-btn:disabled{opacity:.45;cursor:not-allowed}
+
+  /* ── pipeline ── */
+  .pipe{margin-top:16px;display:none}
+  .pipe.show{display:block}
+  .pstep{display:grid;grid-template-columns:26px 1fr auto;gap:10px;align-items:center;
+    padding:11px 4px;border-bottom:1px solid var(--line2);font-size:13.5px;color:var(--t2);transition:.3s}
+  .pstep .st{font-family:var(--fm);font-size:10.5px;letter-spacing:.1em}
+  .pstep.doing{color:var(--t0)} .pstep.doing .st{color:var(--rec)}
+  .pstep.done{color:var(--t1)} .pstep.done .st{color:var(--good)}
+  .spin{width:14px;height:14px;border:2px solid var(--line);border-top-color:var(--rec);border-radius:50%;
+    animation:sp .7s linear infinite;display:inline-block}
+  @keyframes sp{to{transform:rotate(360deg)}}
+
+  /* ── results ── */
+  .results{display:none}
+  .results.show{display:block;animation:fin .5s ease}
+  @keyframes fin{from{opacity:0;transform:translateY(10px)}to{opacity:1}}
+  .clips-out{display:grid;gap:12px;margin-top:14px}
+  .clip-o{background:var(--k1);border:1px solid var(--line);border-radius:15px;overflow:hidden}
+  .clip-o .head{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:13px 15px;flex-wrap:wrap}
+  .clip-o .tcx{font-family:var(--fm);font-size:10.5px;color:var(--t2);letter-spacing:.06em}
+  .viral{display:inline-flex;align-items:center;gap:6px;font-family:var(--fm);font-size:11px;color:var(--cy)}
+  .viral .bar{width:64px;height:5px;border-radius:3px;background:var(--k3);overflow:hidden}
+  .viral .bar i{display:block;height:100%;background:var(--cy);border-radius:3px}
+  .hook{padding:0 15px 4px;font-family:var(--fd);font-size:19px;line-height:1.3;text-wrap:balance}
+  .hook q{quotes:"“" "”"}
+  .clip-o .why{padding:0 15px;font-size:12.5px;color:var(--t1);line-height:1.55}
+  .plats{display:flex;gap:7px;padding:12px 15px 14px;flex-wrap:wrap}
+  .plat{font-size:11px;font-weight:600;padding:5px 11px;border-radius:999px;border:1px solid var(--line);color:var(--t1)}
+  .capbtn{margin:0 15px 14px;padding:9px 14px;border-radius:9px;border:1px solid var(--rec-deep);
+    color:var(--rec);font-size:12.5px;font-weight:600;transition:.15s}
+  .capbtn:hover{background:var(--rec-dim)}
+  .caption{display:none;margin:0 15px 15px;background:var(--k0);border:1px solid var(--line2);border-radius:11px;
+    padding:13px;font-size:13px;line-height:1.6;color:var(--t1);white-space:pre-wrap}
+  .caption.show{display:block}
+  .caption b{color:var(--t0)}
+  .caption .hash{color:var(--rec)}
+
+  /* ── sponsored ── */
+  .spon{background:linear-gradient(135deg,var(--k2),var(--k1));border:1px solid var(--cy);border-radius:15px;
+    padding:17px;margin-top:16px}
+  .spon .lbl{font-family:var(--fm);font-size:10px;letter-spacing:.16em;color:var(--cy)}
+  .spon h4{font-family:var(--fd);font-weight:400;font-size:19px;margin:7px 0 4px}
+  .spon p{font-size:13px;color:var(--t1);line-height:1.6}
+  .spon .price{margin-top:10px;font-size:13px}
+  .spon .price b{color:var(--cy);font-size:16px}
+
+  /* ── calendario ── */
+  .cal{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-top:14px}
+  .cal .dh{font-family:var(--fm);font-size:9.5px;color:var(--t2);text-align:center;letter-spacing:.08em;padding:3px 0}
+  .day{aspect-ratio:1;border-radius:8px;background:var(--k1);border:1px solid var(--line2);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:11px;color:var(--t2);
+    font-variant-numeric:tabular-nums}
+  .day.post{background:var(--rec-dim);border-color:var(--rec-deep);color:var(--t0)}
+  .day .ico{font-size:11px;line-height:1}
+  .cal-leg{display:flex;gap:14px;font-size:11.5px;color:var(--t1);margin-top:10px;flex-wrap:wrap}
+
+  /* ── reach chart ── */
+  .card{background:var(--k1);border:1px solid var(--line2);border-radius:16px;padding:17px;margin-top:16px}
+  .card h3{font-size:14px;font-weight:600}
+  .card .hint{font-size:12px;color:var(--t2);margin-top:2px}
+  .chart-box{overflow-x:auto}
+  .chart-box svg{display:block;min-width:500px;width:100%;height:auto}
+
+  .stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-top:14px}
+  .stt{background:var(--k1);border:1px solid var(--line2);border-radius:13px;padding:13px 15px}
+  .stt .l{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--t2)}
+  .stt .v{font-family:var(--fd);font-size:26px;margin-top:3px;font-variant-numeric:tabular-nums}
+  .stt .v em{font-style:normal;color:var(--rec)}
+
+  footer{margin-top:44px;padding-top:18px;border-top:1px solid var(--line2);font-size:12px;color:var(--t2);line-height:1.7}
+  footer b{color:var(--t1)}
+  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="topline">
+      <h1>ClipEngine<span class="dot">.</span></h1>
+      <span class="rec-chip"><i></i>DEMO EN VIVO</span>
+    </div>
+    <p class="sub">Un shoot en la calle → un mes de contenido. La IA encuentra los momentos virales de tus entrevistas, corta los clips, escribe los hooks y los deja listos para publicar — o para venderle el espacio a una marca.</p>
+  </header>
+
+  <div class="stepbar">
+    <span class="on" id="sb1">01 · FOOTAGE</span>
+    <span id="sb2">02 · IA PROCESA</span>
+    <span id="sb3">03 · PUBLICAR</span>
+  </div>
+
+  <h2 class="sec-title">1 · Elige el material crudo</h2>
+  <p class="sec-sub">Estas son entrevistas de calle típicas de un día de grabación en Beverly Hills. Selecciona una:</p>
+
+  <div class="footage" id="footage">
+    <button class="clipcard" aria-pressed="true" data-f="0">
+      <div class="thumb t1"><span class="play">▶</span><span class="tc">RODEO_DR_A017.MP4 · 00:14:32 · 4K</span></div>
+      <div class="cmeta"><div class="nm">“¿Cuánto cuesta tu outfit?” — Rodeo Drive</div><div class="in">18 entrevistas · audio limpio</div></div>
+    </button>
+    <button class="clipcard" aria-pressed="false" data-f="1">
+      <div class="thumb t2"><span class="play">▶</span><span class="tc">MELROSE_B003.MP4 · 00:11:08 · 4K</span></div>
+      <div class="cmeta"><div class="nm">“Prueba esto sin ver la marca” — Melrose</div><div class="in">12 reacciones · producto en mano</div></div>
+    </button>
+    <button class="clipcard" aria-pressed="false" data-f="2">
+      <div class="thumb t3"><span class="play">▶</span><span class="tc">BH_NIGHT_C022.MP4 · 00:09:47 · 4K</span></div>
+      <div class="cmeta"><div class="nm">“¿Qué negocio abrirías en Beverly Hills?” — noche</div><div class="in">15 entrevistas · b-roll nocturno</div></div>
+    </button>
+  </div>
+
+  <button class="process-btn" id="processBtn">✦ Procesar con IA</button>
+
+  <div class="pipe" id="pipe">
+    <div class="pstep" data-p="0"><span class="ic">🎙</span><span>Transcribiendo 14:32 de audio (inglés + español)…</span><span class="st">EN COLA</span></div>
+    <div class="pstep" data-p="1"><span class="ic">⚡</span><span>Detectando momentos virales — picos de emoción, frases citables, reacciones…</span><span class="st">EN COLA</span></div>
+    <div class="pstep" data-p="2"><span class="ic">✂️</span><span>Cortando clips verticales 9:16 con reencuadre automático al rostro…</span><span class="st">EN COLA</span></div>
+    <div class="pstep" data-p="3"><span class="ic">✍️</span><span>Escribiendo hooks, títulos y captions por plataforma…</span><span class="st">EN COLA</span></div>
+    <div class="pstep" data-p="4"><span class="ic">💬</span><span>Generando subtítulos animados estilo karaoke…</span><span class="st">EN COLA</span></div>
+    <div class="pstep" data-p="5"><span class="ic">📅</span><span>Armando calendario de publicación con horarios óptimos…</span><span class="st">EN COLA</span></div>
+  </div>
+
+  <div class="results" id="results">
+    <h2 class="sec-title">2 · La IA encontró 9 clips — estos son los 3 mejores</h2>
+    <p class="sec-sub">Cada clip trae puntaje viral, hook, y captions listos por plataforma. Toca “Ver caption”.</p>
+    <div class="clips-out" id="clipsOut"></div>
+
+    <div class="spon" id="sponBox"></div>
+
+    <h2 class="sec-title" style="margin-top:28px">3 · Mes de publicación, resuelto</h2>
+    <p class="sec-sub">De un solo día de grabación salen 9 clips + 6 fotos. El sistema los agenda en los horarios de mayor alcance:</p>
+    <div class="cal" id="cal"></div>
+    <div class="cal-leg"><span>🎬 clip de video</span><span>📷 foto / carrusel</span><span style="color:var(--cy)">★ contenido patrocinado</span></div>
+
+    <div class="card">
+      <h3>Alcance proyectado del mes</h3>
+      <p class="hint">Basado en promedios reales de formato street-interview en cuentas de 10–50K seguidores</p>
+      <div class="chart-box"><svg id="reach" viewBox="0 0 540 200" role="img" aria-label="Alcance proyectado semanal"></svg></div>
+    </div>
+
+    <div class="stat-row">
+      <div class="stt"><div class="l">Clips / mes</div><div class="v">36</div></div>
+      <div class="stt"><div class="l">Horas de edición ahorradas</div><div class="v"><em>58</em></div></div>
+      <div class="stt"><div class="l">Alcance estimado</div><div class="v">1.4M</div></div>
+      <div class="stt"><div class="l">Espacios patrocinables</div><div class="v"><em>8</em></div></div>
+    </div>
+  </div>
+
+  <footer>
+    <b>Cómo funcionaría en producción:</b> transcripción con Whisper, detección de momentos + redacción con Claude, corte y reencuadre automático 9:16, subtítulos animados y publicación programada en TikTok / Reels / Shorts. Tú grabas; el sistema hace todo lo demás. Esta demo usa datos simulados.<br><br>
+    Demo construida por Joseph Mondragón · Sistemas de contenido con IA
+  </footer>
+</div>
+
+<script>
+const FOOTAGE=[
+ {clips:[
+   {tc:"03:12 – 03:41 · 29s",score:96,hook:"“Mi outfit cuesta más que tu renta… y te digo por qué lo vale.”",
+    why:"Pico de emoción + cifra concreta + tono retador: la fórmula que detiene el scroll. La IA detectó risa del entrevistador a los 3s — se queda en el corte.",
+    cap:`<b>TikTok/Reels:</b>\nasked strangers in Beverly Hills what their outfit costs 💸 la respuesta de esta señora me dejó frío…\n\n<span class="hash">#beverlyhills #streetinterview #fashion #outfitcheck #losangeles</span>\n\n<b>Hora óptima:</b> martes 7:12 PM PT · <b>Título Shorts:</b> "Her outfit costs WHAT?!"`},
+   {tc:"07:58 – 08:24 · 26s",score:91,hook:"“No es cuánto gastas — es cómo lo combinas.” El estilista de celebridades que paró sin saber quién era.",
+    why:"Giro narrativo: el personaje resulta ser alguien relevante. La IA lo marcó por el cambio de ritmo en la conversación.",
+    cap:`<b>TikTok/Reels:</b>\nparé a este señor por su outfit… resultó vestir a la mitad de Hollywood 🤯\n\n<span class="hash">#stylist #hollywood #fashiontok #beverlyhills</span>\n\n<b>Hora óptima:</b> jueves 12:30 PM PT · <b>Título Shorts:</b> "Accidentally interviewed a celebrity stylist"`},
+   {tc:"11:03 – 11:37 · 34s",score:88,hook:"“Vine de visita desde Guadalajara y me vestí mejor que todo Rodeo Drive.”",
+    why:"Conexión con audiencia latina + orgullo local = comentarios garantizados. La IA sugiere subtítulos en ambos idiomas.",
+    cap:`<b>TikTok/Reels:</b>\nel señor de Guadalajara humillando a Rodeo Drive con puro estilo mexicano 🇲🇽🔥\n\n<span class="hash">#mexicanosenusa #guadalajara #rodeodrive #estilo</span>\n\n<b>Hora óptima:</b> domingo 6:45 PM PT · <b>Título Shorts:</b> "Guadalajara style takes over Beverly Hills"`}],
+  spon:{brand:"marca de moda / boutique",h:"Versión patrocinada: “¿Cuánto cuesta tu outfit?” × [Marca]",
+   p:"El mismo formato, pero las personas entrevistadas adivinan el precio de una prenda de la marca — y el mejor estimado se la lleva. El logo vive en el marcador de precio, no en un anuncio. Contenido nativo que la marca puede correr como ad.",
+   price:"Paquete para la marca: 3 clips + fotos del shoot · <b>$2,500–$4,000 USD</b> por campaña"}},
+ {clips:[
+   {tc:"01:44 – 02:12 · 28s",score:94,hook:"“¿Esto cuesta $8? Pensé que era de $60.” — reacción a ciegas, sin marca visible.",
+    why:"El formato 'blind test' es de los que más convierten a ventas: la reacción es la prueba social.",
+    cap:`<b>TikTok/Reels:</b>\nle dimos a probar esto a gente en Melrose sin decirles la marca… las reacciones 😳\n\n<span class="hash">#blindtest #melrose #producttest #la</span>\n\n<b>Hora óptima:</b> miércoles 11:50 AM PT`},
+   {tc:"05:30 – 05:58 · 28s",score:90,hook:"“Se lo compraría a mi mamá ahorita mismo. ¿Dónde lo venden?”",
+    why:"Intención de compra espontánea en cámara — oro puro para una marca. Clip ideal para pauta.",
+    cap:`<b>TikTok/Reels:</b>\ncuando el producto es tan bueno que la gente pregunta dónde comprarlo A MITAD de la entrevista\n\n<span class="hash">#reaccion #productoviral #ugc</span>\n\n<b>Hora óptima:</b> viernes 5:20 PM PT`},
+   {tc:"08:15 – 08:47 · 32s",score:86,hook:"“Yo trabajo en marketing… y esto está mejor hecho que lo nuestro.”",
+    why:"Testimonio de un profesional del gremio: credibilidad instantánea.",
+    cap:`<b>TikTok/Reels:</b>\nuna marketera probó el producto sin saber la marca y dijo ESTO 👀\n\n<span class="hash">#marketing #honestreview #streetinterview</span>\n\n<b>Hora óptima:</b> lunes 8:05 PM PT`}],
+  spon:{brand:"marca de producto / DTC",h:"Versión patrocinada: Blind Test × [Marca]",
+   p:"La marca pone el producto; tú pones la calle y la cámara. 12 reacciones reales sin guion — la marca recibe los derechos para pauta (UGC whitelisting) y tú cobras por shoot + por uso.",
+   price:"Paquete para la marca: shoot + 4 clips + derechos de pauta 90 días · <b>$3,000–$5,500 USD</b>"}},
+ {clips:[
+   {tc:"02:20 – 02:51 · 31s",score:93,hook:"“Abriría un valet de perros. En esta ciudad, los perros viven mejor que yo.”",
+    why:"Humor + verdad local = compartible. La IA detectó que es la respuesta con más risa de fondo.",
+    cap:`<b>TikTok/Reels:</b>\nle pregunté a la gente qué negocio abriría en Beverly Hills 💰 las respuestas no tienen desperdicio\n\n<span class="hash">#beverlyhills #emprendedor #nightlife #la</span>\n\n<b>Hora óptima:</b> sábado 9:10 PM PT`},
+   {tc:"04:47 – 05:19 · 32s",score:89,hook:"“Un restaurante donde el menú cambie según tu estado de ánimo.” — y explicó el modelo de negocio completo.",
+    why:"Respuesta inesperadamente brillante de un desconocido: el clip que la gente manda a sus amigos emprendedores.",
+    cap:`<b>TikTok/Reels:</b>\neste desconocido pitcheó mejor que la mitad de Shark Tank 🦈\n\n<span class="hash">#sharktank #negocios #ideas #startup</span>\n\n<b>Hora óptima:</b> martes 1:15 PM PT`},
+   {tc:"07:02 – 07:29 · 27s",score:85,hook:"“¿Negocio? Ninguno. Vine a caminar porque no duermo. Beverly Hills de noche es terapia.”",
+    why:"Momento humano inesperado — el contraste emocional que balancea la serie y sube retención del perfil.",
+    cap:`<b>TikTok/Reels:</b>\nno todas las respuestas fueron de negocios… esta me llegó 🥺\n\n<span class="hash">#beverlyhills #denoche #real #humanos</span>\n\n<b>Hora óptima:</b> domingo 10:30 PM PT`}],
+  spon:{brand:"venue / hospitalidad",h:"Versión patrocinada: Serie nocturna × [Venue]",
+   p:"La serie se graba afuera del venue de la marca; las entrevistas terminan con la pregunta '¿ya conoces este lugar?'. El venue aparece como locación protagonista, no como anuncio.",
+   price:"Paquete para la marca: 2 noches de shoot + 5 clips + fotos · <b>$2,000–$3,500 USD</b>"}}
+];
+
+let sel=0,processed=false;
+const fbox=document.getElementById("footage");
+fbox.addEventListener("click",e=>{
+  const b=e.target.closest(".clipcard");if(!b)return;
+  sel=+b.dataset.f;
+  fbox.querySelectorAll(".clipcard").forEach(c=>c.setAttribute("aria-pressed",c===b));
+  if(processed){renderResults();/* re-render para el nuevo material */}
+});
+
+const pipe=document.getElementById("pipe"),steps=[...pipe.querySelectorAll(".pstep")];
+document.getElementById("processBtn").addEventListener("click",function(){
+  this.disabled=true;this.textContent="Procesando…";
+  document.getElementById("sb2").classList.add("on");
+  pipe.classList.add("show");
+  document.getElementById("results").classList.remove("show");
+  steps.forEach(s=>{s.className="pstep";s.querySelector(".st").textContent="EN COLA";});
+  let i=0;
+  const durs=[1400,1600,1500,1400,1100,900];
+  (function next(){
+    if(i>0){steps[i-1].className="pstep done";steps[i-1].querySelector(".st").textContent="LISTO ✓";}
+    if(i>=steps.length){finish();return;}
+    steps[i].className="pstep doing";
+    steps[i].querySelector(".st").innerHTML='<span class="spin"></span>';
+    setTimeout(next,durs[i]);i++;
+  })();
+});
+function finish(){
+  processed=true;
+  document.getElementById("sb3").classList.add("on");
+  renderResults();
+  document.getElementById("results").classList.add("show");
+  document.getElementById("processBtn").textContent="✓ Procesado — elige otro material para repetir";
+  document.getElementById("processBtn").disabled=false;
+  document.getElementById("results").scrollIntoView({behavior:"smooth",block:"start"});
+}
+function renderResults(){
+  const F=FOOTAGE[sel];
+  document.getElementById("clipsOut").innerHTML=F.clips.map((c,i)=>`
+    <div class="clip-o">
+      <div class="head"><span class="tcx">CLIP ${i+1} · ${c.tc} · 9:16</span>
+        <span class="viral">VIRAL ${c.score}<span class="bar"><i style="width:${c.score}%"></i></span></span></div>
+      <div class="hook">${c.hook}</div>
+      <p class="why"><b style="color:var(--rec)">Por qué la IA eligió este momento:</b> ${c.why}</p>
+      <div class="plats"><span class="plat">TikTok</span><span class="plat">Reels</span><span class="plat">Shorts</span><span class="plat">Sub ES/EN</span></div>
+      <button class="capbtn" data-c="${i}">Ver caption generado ↓</button>
+      <div class="caption" id="cap${i}">${c.cap}</div>
+    </div>`).join("");
+  document.getElementById("sponBox").innerHTML=`
+    <span class="lbl">★ OPORTUNIDAD DE PATROCINIO DETECTADA — ${F.spon.brand.toUpperCase()}</span>
+    <h4>${F.spon.h}</h4><p>${F.spon.p}</p>
+    <p class="price">${F.spon.price}</p>`;
+  renderCal();renderReach();
+}
+document.getElementById("clipsOut").addEventListener("click",e=>{
+  const b=e.target.closest(".capbtn");if(!b)return;
+  const cap=document.getElementById("cap"+b.dataset.c);
+  cap.classList.toggle("show");
+  b.textContent=cap.classList.contains("show")?"Ocultar caption ↑":"Ver caption generado ↓";
+});
+function renderCal(){
+  const cal=document.getElementById("cal");
+  const heads=["L","M","M","J","V","S","D"];
+  const posts={2:"🎬",4:"📷",6:"🎬",9:"🎬★",11:"📷",13:"🎬",16:"🎬",18:"📷",20:"🎬★",23:"🎬",25:"📷",27:"🎬",29:"🎬"};
+  let h=heads.map(d=>`<span class="dh">${d}</span>`).join("");
+  for(let d=1;d<=30;d++){
+    const p=posts[d];
+    h+=`<div class="day${p?" post":""}">${d}${p?`<span class="ico">${p.includes("★")?`<span style="color:var(--cy)">${p}</span>`:p}</span>`:""}</div>`;
+  }
+  cal.innerHTML=h;
+}
+function renderReach(){
+  const svg=document.getElementById("reach"),W=540,H=200,P={t:18,r:14,b:30,l:44};
+  const data=[["S1",120],["S2",240],["S3",410],["S4",630]],max=700;
+  const bw=58,gap=(W-P.l-P.r-bw*4)/5;
+  const Y=v=>P.t+(H-P.t-P.b)*(1-v/max);
+  let g="";
+  [0,350,700].forEach(v=>{g+=`<line x1="${P.l}" x2="${W-P.r}" y1="${Y(v)}" y2="${Y(v)}" stroke="#1E1E24"/>
+    <text x="${P.l-8}" y="${Y(v)+4}" fill="#6E6D6A" font-size="10" text-anchor="end" font-family="ui-monospace,monospace">${v}K</text>`;});
+  data.forEach(([l,v],i)=>{
+    const x=P.l+gap+(bw+gap)*i,y=Y(v),h2=Y(0)-y;
+    g+=`<path d="M${x},${y+4} q0,-4 4,-4 h${bw-8} q4,0 4,4 v${h2-4} h-${bw} z" fill="${i===3?'#E84A3F':'#8f3a34'}"/>
+        <text x="${x+bw/2}" y="${y-8}" fill="#F4F3F1" font-size="12" font-weight="600" text-anchor="middle">${v}K</text>
+        <text x="${x+bw/2}" y="${H-10}" fill="#A9A8A4" font-size="11" text-anchor="middle">${l}</text>`;
+  });
+  svg.innerHTML=g;
+}
+</script>

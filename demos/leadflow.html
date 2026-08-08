@@ -1,0 +1,565 @@
+<title>LeadFlow · Motor de Clientes con IA</title>
+<style>
+  /* ── LEADFLOW — identidad: "operaciones de agencia de noche en Beverly Hills"
+     Tema único deliberado: carbón cálido + oro champán. Todo pintado explícito. ── */
+  :root{
+    --ink-0:#0F1114; --ink-1:#15181D; --ink-2:#1C2027; --ink-3:#252A33;
+    --line:#2E3440; --line-soft:#232830;
+    --txt-0:#F2EFE8; --txt-1:#B8B4A9; --txt-2:#7E7B72;
+    --gold:#D9B96C; --gold-deep:#B08F45; --gold-dim:rgba(217,185,108,.14);
+    --good:#7FBF7F; --warn:#E0A458; --bad:#D97862;
+    --font-d:"Didot","Bodoni MT","Playfair Display",Georgia,serif;
+    --font-b:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --font-m:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{background:var(--ink-0);color:var(--txt-0);font-family:var(--font-b);
+    font-size:15px;line-height:1.55;min-height:100vh}
+  ::selection{background:var(--gold);color:var(--ink-0)}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+  button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+
+  .wrap{max-width:1060px;margin:0 auto;padding:0 18px 90px}
+
+  /* ── Header ── */
+  header{padding:26px 0 18px;display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  .brand h1{font-family:var(--font-d);font-weight:400;font-size:clamp(26px,5vw,34px);letter-spacing:.5px;text-wrap:balance}
+  .brand h1 em{font-style:italic;color:var(--gold)}
+  .brand .sub{color:var(--txt-1);font-size:13px;margin-top:3px}
+  .demo-chip{font-family:var(--font-m);font-size:10.5px;letter-spacing:.14em;color:var(--gold);
+    border:1px solid var(--gold-deep);padding:5px 10px;border-radius:999px;white-space:nowrap}
+
+  /* ── Tabs ── */
+  nav{position:sticky;top:0;z-index:40;background:linear-gradient(var(--ink-0) 82%,rgba(15,17,20,0));
+    padding:10px 0 14px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+  nav::-webkit-scrollbar{display:none}
+  .tab{flex:0 0 auto;padding:9px 16px;border-radius:999px;border:1px solid var(--line);
+    color:var(--txt-1);font-size:13.5px;font-weight:500;transition:.18s;white-space:nowrap}
+  .tab[aria-selected="true"]{background:var(--gold);border-color:var(--gold);color:var(--ink-0);font-weight:600}
+  .tab .n{font-family:var(--font-m);font-size:11px;opacity:.75;margin-left:5px}
+
+  section[hidden]{display:none}
+  .sec-title{font-family:var(--font-d);font-weight:400;font-size:21px;margin:26px 0 4px}
+  .sec-sub{color:var(--txt-1);font-size:13.5px;margin-bottom:16px;max-width:62ch}
+
+  /* ── KPIs ── */
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:18px}
+  .kpi{background:var(--ink-1);border:1px solid var(--line-soft);border-radius:14px;padding:14px 16px}
+  .kpi .l{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--txt-2)}
+  .kpi .v{font-family:var(--font-d);font-size:30px;margin-top:4px;font-variant-numeric:tabular-nums}
+  .kpi .d{font-size:12px;margin-top:2px;font-variant-numeric:tabular-nums}
+  .kpi .d.up{color:var(--good)} .kpi .d.gold{color:var(--gold)}
+
+  /* ── Cards / paneles ── */
+  .card{background:var(--ink-1);border:1px solid var(--line-soft);border-radius:16px;padding:18px;margin-top:14px}
+  .card h3{font-size:14px;font-weight:600;letter-spacing:.02em}
+  .card .hint{font-size:12px;color:var(--txt-2);margin-top:2px}
+
+  .chart-box{overflow-x:auto}
+  .chart-box svg{display:block;min-width:520px;width:100%;height:auto}
+  .legend{display:flex;gap:16px;margin-top:10px;font-size:12px;color:var(--txt-1);flex-wrap:wrap}
+  .legend .sw{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+
+  /* ── Funnel ── */
+  .funnel{display:grid;gap:9px;margin-top:14px}
+  .frow{display:grid;grid-template-columns:118px 1fr 62px;align-items:center;gap:10px;font-size:13px}
+  .frow .fl{color:var(--txt-1)} .frow .fv{text-align:right;font-variant-numeric:tabular-nums;color:var(--txt-0)}
+  .fbar{height:22px;background:var(--ink-3);border-radius:5px;overflow:hidden}
+  .fbar i{display:block;height:100%;background:linear-gradient(90deg,var(--gold-deep),var(--gold));
+    border-radius:5px;width:0;transition:width 1s cubic-bezier(.2,.7,.2,1)}
+
+  /* ── Leads ── */
+  .filters{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 4px}
+  .chip{padding:7px 13px;border-radius:999px;border:1px solid var(--line);font-size:12.5px;color:var(--txt-1);transition:.15s}
+  .chip[aria-pressed="true"]{background:var(--gold-dim);border-color:var(--gold-deep);color:var(--gold)}
+  .lead-list{display:grid;gap:10px;margin-top:12px}
+  .lead{display:grid;grid-template-columns:44px 1fr auto;gap:12px;align-items:center;text-align:left;
+    background:var(--ink-1);border:1px solid var(--line-soft);border-radius:14px;padding:13px 15px;transition:.15s;width:100%}
+  .lead:hover{border-color:var(--gold-deep)}
+  .avatar{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;
+    font-family:var(--font-d);font-size:17px;color:var(--ink-0);background:linear-gradient(135deg,var(--gold),var(--gold-deep))}
+  .lead .nm{font-weight:600;font-size:14.5px}
+  .lead .rl{font-size:12.5px;color:var(--txt-1)}
+  .lead .co{font-size:12px;color:var(--txt-2)}
+  .score{text-align:right}
+  .score .sv{font-family:var(--font-m);font-size:15px;color:var(--gold);font-variant-numeric:tabular-nums}
+  .score .sl{font-size:10px;letter-spacing:.08em;color:var(--txt-2);text-transform:uppercase}
+  .vtag{display:inline-block;font-size:10px;letter-spacing:.06em;color:var(--good);margin-left:6px}
+
+  /* ── Modal lead ── */
+  .overlay{position:fixed;inset:0;background:rgba(8,9,11,.72);backdrop-filter:blur(4px);z-index:90;
+    display:flex;align-items:flex-end;justify-content:center}
+  @media(min-width:640px){.overlay{align-items:center}}
+  .overlay[hidden]{display:none}
+  .modal{background:var(--ink-2);border:1px solid var(--line);border-radius:20px 20px 0 0;
+    width:100%;max-width:620px;max-height:88vh;overflow-y:auto;padding:22px}
+  @media(min-width:640px){.modal{border-radius:20px}}
+  .modal .close{float:right;color:var(--txt-2);font-size:22px;line-height:1;padding:2px 8px}
+  .mrow{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0;font-size:12.5px}
+  .mrow span{background:var(--ink-3);border:1px solid var(--line-soft);padding:5px 11px;border-radius:8px;color:var(--txt-1)}
+  .gen-btn{display:block;width:100%;margin-top:14px;padding:13px;border-radius:12px;
+    background:linear-gradient(90deg,var(--gold),var(--gold-deep));color:var(--ink-0);
+    font-weight:700;font-size:14.5px;letter-spacing:.02em;transition:.15s}
+  .gen-btn:disabled{opacity:.55;cursor:wait}
+  .email-out{margin-top:14px;background:var(--ink-0);border:1px solid var(--line);border-radius:12px;padding:16px;
+    font-size:13.5px;line-height:1.65;white-space:pre-wrap;display:none}
+  .email-out.show{display:block}
+  .email-out .meta{font-family:var(--font-m);font-size:11.5px;color:var(--gold);margin-bottom:10px;
+    padding-bottom:10px;border-bottom:1px dashed var(--line)}
+  .cursor{display:inline-block;width:8px;height:15px;background:var(--gold);vertical-align:-2px;
+    animation:blink .8s steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+  .ai-note{margin-top:10px;font-size:12px;color:var(--txt-2);border-left:2px solid var(--gold-deep);padding-left:10px;display:none}
+  .ai-note.show{display:block}
+
+  /* ── Secuencias ── */
+  .seq{position:relative;margin-top:18px;padding-left:26px}
+  .seq::before{content:"";position:absolute;left:8px;top:6px;bottom:6px;width:1px;background:var(--line)}
+  .step{position:relative;margin-bottom:12px}
+  .step::before{content:"";position:absolute;left:-23px;top:16px;width:11px;height:11px;border-radius:50%;
+    background:var(--ink-0);border:2px solid var(--gold)}
+  .step-head{width:100%;text-align:left;background:var(--ink-1);border:1px solid var(--line-soft);
+    border-radius:13px;padding:13px 15px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+  .step-head:hover{border-color:var(--gold-deep)}
+  .step-head .t .day{font-family:var(--font-m);font-size:10.5px;letter-spacing:.1em;color:var(--gold)}
+  .step-head .t .nm{font-weight:600;font-size:14px;margin-top:2px}
+  .step-stats{font-size:11.5px;color:var(--txt-1);text-align:right;font-variant-numeric:tabular-nums;flex:0 0 auto}
+  .step-body{display:none;background:var(--ink-0);border:1px solid var(--line-soft);border-top:none;
+    border-radius:0 0 13px 13px;margin:-6px 2px 0;padding:18px 15px 14px;font-size:13.5px;line-height:1.65;white-space:pre-wrap;color:var(--txt-1)}
+  .step.open .step-body{display:block}
+  .step-body b{color:var(--txt-0)}
+
+  /* ── Agente ── */
+  .agent-top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+  .pulse{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--good)}
+  .pulse i{width:9px;height:9px;border-radius:50%;background:var(--good);animation:pul 1.6s ease infinite}
+  @keyframes pul{0%,100%{box-shadow:0 0 0 0 rgba(127,191,127,.5)}55%{box-shadow:0 0 0 7px rgba(127,191,127,0)}}
+  .switch{width:52px;height:29px;border-radius:999px;background:var(--ink-3);border:1px solid var(--line);position:relative;transition:.2s}
+  .switch i{position:absolute;top:3px;left:3px;width:21px;height:21px;border-radius:50%;background:var(--txt-2);transition:.2s}
+  .switch[aria-checked="true"]{background:var(--gold-dim);border-color:var(--gold-deep)}
+  .switch[aria-checked="true"] i{left:26px;background:var(--gold)}
+  .feed{margin-top:14px;display:grid;gap:8px;max-height:390px;overflow-y:auto}
+  .ev{display:grid;grid-template-columns:auto 1fr;gap:10px;background:var(--ink-1);border:1px solid var(--line-soft);
+    border-radius:12px;padding:11px 13px;font-size:13px;animation:slidein .35s ease}
+  @keyframes slidein{from{opacity:0;transform:translateY(-6px)}to{opacity:1}}
+  .ev .ic{font-size:15px}
+  .ev .tm{font-family:var(--font-m);font-size:10.5px;color:var(--txt-2);margin-top:2px}
+  .ev .tag{display:inline-block;font-family:var(--font-m);font-size:10px;letter-spacing:.08em;
+    padding:2px 7px;border-radius:5px;margin-left:6px;vertical-align:1px}
+  .tag.int{background:rgba(127,191,127,.15);color:var(--good)}
+  .tag.later{background:rgba(224,164,88,.15);color:var(--warn)}
+  .tag.no{background:rgba(217,120,98,.14);color:var(--bad)}
+  .inbox{margin-top:14px;display:grid;gap:10px}
+  .msg{background:var(--ink-1);border:1px solid var(--line-soft);border-radius:13px;padding:14px 15px}
+  .msg .from{font-weight:600;font-size:13.5px}
+  .msg .from small{font-weight:400;color:var(--txt-2);font-size:11.5px;margin-left:6px}
+  .msg .body{font-size:13px;color:var(--txt-1);margin-top:6px;line-height:1.55}
+  .msg .draft{margin-top:10px;border-left:2px solid var(--gold-deep);padding:8px 0 8px 12px;
+    background:var(--ink-0);border-radius:0 9px 9px 0;font-size:12.5px;color:var(--txt-1)}
+  .msg .draft .dl{font-family:var(--font-m);font-size:10px;letter-spacing:.1em;color:var(--gold);display:block;margin-bottom:4px}
+
+  footer{margin-top:44px;padding-top:18px;border-top:1px solid var(--line-soft);
+    font-size:12px;color:var(--txt-2);line-height:1.7}
+  footer b{color:var(--txt-1)}
+  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <h1>Lead<em>Flow</em></h1>
+      <div class="sub">Motor de clientes con IA · Fotografía & video comercial · Los Ángeles</div>
+    </div>
+    <span class="demo-chip">DEMO EN VIVO</span>
+  </header>
+
+  <nav role="tablist" aria-label="Secciones">
+    <button class="tab" role="tab" aria-selected="true" data-t="panel">Panel</button>
+    <button class="tab" role="tab" aria-selected="false" data-t="leads">Leads <span class="n" id="leadCount">48</span></button>
+    <button class="tab" role="tab" aria-selected="false" data-t="seq">Secuencias</button>
+    <button class="tab" role="tab" aria-selected="false" data-t="agente">Agente IA</button>
+  </nav>
+
+  <!-- ══ PANEL ══ -->
+  <section id="panel" role="tabpanel">
+    <h2 class="sec-title">Tu embudo, trabajando solo</h2>
+    <p class="sec-sub">El sistema encuentra marcas y agencias en LA, les escribe emails personalizados uno por uno, y agenda reuniones mientras tú estás en el shoot. Estos números son una simulación de 8 semanas de campaña.</p>
+
+    <div class="kpis">
+      <div class="kpi"><div class="l">Leads calificados</div><div class="v" data-count="1248">0</div><div class="d up">+212 esta semana</div></div>
+      <div class="kpi"><div class="l">Emails enviados</div><div class="v" data-count="3412">0</div><div class="d gold">100% personalizados</div></div>
+      <div class="kpi"><div class="l">Tasa de apertura</div><div class="v"><span data-count="61">0</span>%</div><div class="d up">vs. 21% promedio</div></div>
+      <div class="kpi"><div class="l">Respuestas</div><div class="v"><span data-count="321">0</span></div><div class="d up">9.4% de respuesta</div></div>
+      <div class="kpi"><div class="l">Reuniones agendadas</div><div class="v" data-count="27">0</div><div class="d gold">automáticas</div></div>
+      <div class="kpi"><div class="l">Pipeline estimado</div><div class="v">$<span data-count="84">0</span>K</div><div class="d up">27 propuestas activas</div></div>
+    </div>
+
+    <div class="card">
+      <h3>Respuestas por semana</h3>
+      <p class="hint">Pasa el dedo o el cursor sobre la gráfica</p>
+      <div class="chart-box"><svg id="areaChart" viewBox="0 0 560 220" role="img" aria-label="Respuestas por semana, 8 semanas"></svg></div>
+      <div class="legend"><span><i class="sw" style="background:#D9B96C"></i>Respuestas recibidas</span></div>
+    </div>
+
+    <div class="card">
+      <h3>Embudo de conversión — últimas 8 semanas</h3>
+      <div class="funnel" id="funnel"></div>
+    </div>
+  </section>
+
+  <!-- ══ LEADS ══ -->
+  <section id="leads" role="tabpanel" hidden>
+    <h2 class="sec-title">Base de leads verificados</h2>
+    <p class="sec-sub">Conectado a Apollo + LinkedIn + directorios de agencias. Cada lead tiene email verificado y un puntaje de qué tan probable es que necesite foto/video ahora. <b style="color:var(--txt-1)">Toca un lead y genera su email con IA.</b></p>
+    <div class="filters" id="filters"></div>
+    <div class="lead-list" id="leadList"></div>
+  </section>
+
+  <!-- ══ SECUENCIAS ══ -->
+  <section id="seq" role="tabpanel" hidden>
+    <h2 class="sec-title">Secuencia de 3 toques</h2>
+    <p class="sec-sub">Nadie contesta al primer email — el dinero está en el seguimiento. Cada paso se envía solo si no hubo respuesta. Toca un paso para ver la plantilla (la IA la adapta a cada lead).</p>
+    <div class="seq" id="seqList"></div>
+    <div class="card">
+      <h3>Rendimiento por paso</h3>
+      <p class="hint">El email 3 ("despedida") genera el 31% de todas las respuestas</p>
+      <div class="chart-box"><svg id="barChart" viewBox="0 0 560 190" role="img" aria-label="Tasa de respuesta por paso de la secuencia"></svg></div>
+    </div>
+  </section>
+
+  <!-- ══ AGENTE ══ -->
+  <section id="agente" role="tabpanel" hidden>
+    <h2 class="sec-title">Agente IA en vivo</h2>
+    <p class="sec-sub">Esto es lo que hace el agente mientras tú trabajas: busca leads nuevos, envía la secuencia, lee cada respuesta, la clasifica y redacta la contestación. Tú solo apruebas desde el celular.</p>
+    <div class="card">
+      <div class="agent-top">
+        <span class="pulse"><i></i><span id="agentState">Agente activo — procesando</span></span>
+        <button class="switch" id="agentSwitch" role="switch" aria-checked="true" aria-label="Agente activo"><i></i></button>
+      </div>
+      <div class="feed" id="feed" aria-live="polite"></div>
+    </div>
+    <div class="card">
+      <h3>Bandeja clasificada</h3>
+      <p class="hint">Respuestas reales clasificadas por el agente, con contestación ya redactada</p>
+      <div class="inbox" id="inbox"></div>
+    </div>
+  </section>
+
+  <footer>
+    <b>Cómo funcionaría en producción:</b> Apollo.io + Instantly/Smartlead para envío, Claude para redactar y clasificar, y tu calendario conectado para agendar solo. Todo con tu dominio propio y calentamiento de inbox para no caer en spam. Esta demo usa datos simulados.<br><br>
+    Demo construida por Joseph Mondragón · Sistemas de captación con IA
+  </footer>
+</div>
+
+<div class="overlay" id="overlay" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-label="Detalle del lead">
+    <button class="close" id="modalClose" aria-label="Cerrar">×</button>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<script>
+/* ───────── Datos ───────── */
+const LEADS = [
+ {n:"Camila Reyes",r:"Brand Manager",c:"Velluto Beauty",ind:"Belleza",s:94,note:"Lanzan línea de skincare en octubre; buscan contenido UGC y video de producto.",sig:"Publicó en LinkedIn buscando 'video creators en LA'"},
+ {n:"Derek Shaw",r:"Marketing Director",c:"Häus Hospitality Group",ind:"Hospitalidad",s:91,note:"Grupo de 4 restaurantes en West Hollywood; su Instagram no tiene video.",sig:"Abrieron nueva locación hace 3 semanas"},
+ {n:"Priya Natarajan",r:"Head of Social",c:"Solstice Swim",ind:"Moda",s:89,note:"Marca de trajes de baño DTC; hacen 2 campañas por trimestre.",sig:"Su último reel con creador externo hizo 2.1M vistas"},
+ {n:"Marcus Webb",r:"Founder",c:"Webb & Co Realty",ind:"Bienes raíces",s:87,note:"Listados de lujo en Beverly Hills; usa fotos de dron genéricas.",sig:"Publicó 6 propiedades nuevas este mes"},
+ {n:"Alessandra Fiore",r:"CMO",c:"Fiore Fragrances",ind:"Belleza",s:85,note:"Perfumería boutique en Rodeo Dr; cero presencia en TikTok.",sig:"Contrataron agencia de PR el mes pasado"},
+ {n:"Jordan Blake",r:"Creative Director",c:"Atlas Creative Agency",ind:"Agencia",s:84,note:"Agencia mediana; subcontratan producción de video constantemente.",sig:"3 vacantes abiertas de 'video freelance'"},
+ {n:"Sofía Mendoza",r:"Owner",c:"Casa Mendoza",ind:"Hospitalidad",s:82,note:"Restaurante mexicano premium en Melrose; quieren llegar a clientela local.",sig:"Reseñas 4.8★ pero solo 900 seguidores"},
+ {n:"Tyler Nguyen",r:"Ecommerce Lead",c:"Peak Supply Co",ind:"Fitness",s:80,note:"Suplementos y ropa deportiva; corren ads sin video propio.",sig:"Gastan ~$40K/mes en Meta Ads con creativos de stock"},
+ {n:"Rachel Kim",r:"Brand Partnerships",c:"Lumen Skincare",ind:"Belleza",s:78,note:"Buscan creadores para su programa de embajadores.",sig:"Formulario de 'creator program' activo en su web"},
+ {n:"Daniel Ortega",r:"GM",c:"The Palm Room",ind:"Hospitalidad",s:76,note:"Rooftop bar nuevo en DTLA; necesitan contenido de apertura.",sig:"Apertura oficial en 5 semanas"},
+ {n:"Emma Castellano",r:"VP Marketing",c:"Vetta Jewelry",ind:"Moda",s:75,note:"Joyería fina; catálogo con fotos viejas de 2022.",sig:"Rediseñaron su sitio web hace 2 semanas"},
+ {n:"Chris Delgado",r:"Media Buyer",c:"Northstar Ads",ind:"Agencia",s:72,note:"Compran medios para 12 marcas DTC; siempre necesitan creativos frescos.",sig:"Tweet: 'los creativos son el nuevo targeting'"},
+];
+const SEQ = [
+ {day:"DÍA 0",name:"Intro personalizada",stats:"61% apertura · 4.1% resp.",body:`<b>Asunto:</b> quick idea for {marca}'s next launch
+
+Hi {nombre} —
+
+Saw {señal_detectada}. I'm a photographer/videographer based in Beverly Hills — I shoot street interviews and product content that brands actually run as ads.
+
+One idea for {marca}: {idea_generada_por_IA}.
+
+Worth a 15-min call this week?
+
+{firma}
+
+<b>← La IA reemplaza cada {campo} con datos reales del lead.</b>`},
+ {day:"DÍA 3",name:"Prueba social",stats:"48% apertura · 3.2% resp.",body:`<b>Asunto:</b> re: quick idea for {marca}
+
+Hi {nombre} — sharing one example so this isn't abstract:
+
+Last month I shot a street-interview series for a beauty brand on Rodeo Drive. Their top clip did 1.8M organic views and they turned it into their best-performing ad.
+
+I put together 3 concepts specifically for {marca} — want me to send them over?
+
+{firma}`},
+ {day:"DÍA 7",name:"Despedida (la que más responde)",stats:"52% apertura · 6.8% resp.",body:`<b>Asunto:</b> closing the loop
+
+Hi {nombre} — I'll assume the timing isn't right and close this out.
+
+If content ever becomes a priority for {marca}, my calendar link is below. Booking October shoots now.
+
+Either way — {cumplido_genuino_generado_por_IA}.
+
+{firma}
+
+<b>← El "email de despedida" genera 31% de todas las respuestas. La gente odia perder la oportunidad.</b>`},
+];
+const FUNNEL = [["Leads encontrados",1248],["Emails entregados",1102],["Abrieron",672],["Respondieron",321],["Interesados",89],["Reuniones",27]];
+const WEEKS = [{w:"S1",v:12},{w:"S2",v:19},{w:"S3",v:26},{w:"S4",v:31},{w:"S5",v:38},{w:"S6",v:52},{w:"S7",v:64},{w:"S8",v:79}];
+const EVENTS = [
+ ["🔎","Escaneando Apollo: marcas de belleza en LA con +10 empleados… <b>14 leads nuevos</b> encontrados"],
+ ["✅","Emails verificados: 12 de 14 válidos — agregados a la secuencia"],
+ ["✉️","Enviado email 1 a <b>Camila Reyes</b> (Velluto Beauty) — personalizado con su post de LinkedIn"],
+ ["👀","<b>Derek Shaw</b> abrió tu email por 3ª vez — movido a 'alta intención'"],
+ ["📬","Respuesta de <b>Priya Natarajan</b> — clasificada:<span class='tag int'>INTERESADA</span> respuesta redactada, lista para aprobar"],
+ ["✉️","Enviado seguimiento (día 3) a 41 leads sin respuesta"],
+ ["📬","Respuesta de <b>Marcus Webb</b> — clasificada:<span class='tag later'>MÁS TARDE</span> recordatorio programado para el 15 de octubre"],
+ ["🗓️","<b>Rachel Kim</b> agendó reunión — martes 10:30 AM, agregada a tu calendario"],
+ ["📬","Respuesta automática de <b>T. Nguyen</b>: fuera de oficina — reintento en 4 días"],
+ ["🔎","Detectada señal de compra: <b>The Palm Room</b> abre en 5 semanas — prioridad subida a 94"],
+ ["📬","Respuesta de <b>J. Blake</b> (Atlas Agency) — clasificada:<span class='tag int'>INTERESADA</span> pide portafolio, respuesta con media kit redactada"],
+ ["✉️","Email de despedida (día 7) enviado a 28 leads — históricamente responde el 6.8%"],
+];
+const INBOX = [
+ {f:"Priya Natarajan",c:"Solstice Swim · hace 12 min",tag:"int",tagTxt:"INTERESADA",
+  b:"“This is well timed actually — we're planning our resort drop content for November. Can you send examples of street interview work + rates?”",
+  d:"Hi Priya — perfect timing then. Here are 3 street-interview concepts for the resort drop + my rate sheet. I have Nov 4–8 open for shoots. Want me to hold a date?"},
+ {f:"Jordan Blake",c:"Atlas Creative · hace 1 h",tag:"int",tagTxt:"INTERESADA",
+  b:"“We outsource video pretty regularly. Send over your portfolio and day rates — might have something for a client in hospitality next month.”",
+  d:"Hi Jordan — portfolio attached (street interviews + product film). Day rate and half-day options in the deck. Happy to jump on a call re: the hospitality client — Thursday works on my end."},
+ {f:"Marcus Webb",c:"Webb & Co Realty · hace 3 h",tag:"later",tagTxt:"MÁS TARDE",
+  b:"“Not right now — Q4 is our slow season. Circle back in January when new listings pick up.”",
+  d:"(El agente programó un recordatorio automático para el 8 de enero con un email nuevo referenciando sus listados de ese momento.)"},
+];
+
+/* ───────── Tabs ───────── */
+const tabs=document.querySelectorAll(".tab");
+tabs.forEach(t=>t.addEventListener("click",()=>{
+  tabs.forEach(x=>x.setAttribute("aria-selected",x===t));
+  document.querySelectorAll("section[role=tabpanel]").forEach(s=>s.hidden=s.id!==t.dataset.t);
+  window.scrollTo({top:0,behavior:"smooth"});
+}));
+
+/* ───────── Contadores ───────── */
+let counted=false;
+function runCounters(){
+  if(counted)return;counted=true;
+  document.querySelectorAll("[data-count]").forEach(el=>{
+    const end=+el.dataset.count,t0=performance.now(),dur=1200;
+    (function tick(t){const p=Math.min(1,(t-t0)/dur),e=1-Math.pow(1-p,3);
+      el.textContent=Math.round(end*e).toLocaleString("en-US");
+      if(p<1)requestAnimationFrame(tick);})(t0);
+  });
+}
+runCounters();
+
+/* ───────── Área chart ───────── */
+(function(){
+  const svg=document.getElementById("areaChart"),W=560,H=220,P={t:16,r:14,b:30,l:38};
+  const max=90,xw=(W-P.l-P.r)/(WEEKS.length-1);
+  const X=i=>P.l+i*xw, Y=v=>P.t+(H-P.t-P.b)*(1-v/max);
+  let g="";
+  [0,30,60,90].forEach(v=>{g+=`<line x1="${P.l}" x2="${W-P.r}" y1="${Y(v)}" y2="${Y(v)}" stroke="#232830" stroke-width="1"/>
+    <text x="${P.l-8}" y="${Y(v)+4}" fill="#7E7B72" font-size="10" text-anchor="end" font-family="ui-monospace,monospace">${v}</text>`;});
+  const pts=WEEKS.map((d,i)=>`${X(i)},${Y(d.v)}`).join(" ");
+  g+=`<defs><linearGradient id="fade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#D9B96C" stop-opacity=".28"/><stop offset="1" stop-color="#D9B96C" stop-opacity="0"/></linearGradient></defs>`;
+  g+=`<polygon points="${P.l},${Y(0)} ${pts} ${X(WEEKS.length-1)},${Y(0)}" fill="url(#fade)"/>`;
+  g+=`<polyline points="${pts}" fill="none" stroke="#D9B96C" stroke-width="2" stroke-linejoin="round"/>`;
+  WEEKS.forEach((d,i)=>{g+=`<text x="${X(i)}" y="${H-10}" fill="#7E7B72" font-size="10" text-anchor="middle" font-family="ui-monospace,monospace">${d.w}</text>`;});
+  const last=WEEKS.length-1;
+  g+=`<circle cx="${X(last)}" cy="${Y(WEEKS[last].v)}" r="4.5" fill="#D9B96C" stroke="#0F1114" stroke-width="2"/>
+      <text x="${X(last)-6}" y="${Y(WEEKS[last].v)-10}" fill="#F2EFE8" font-size="12" font-weight="600" text-anchor="end">79</text>`;
+  g+=`<line id="xh" y1="${P.t}" y2="${H-P.b}" stroke="#D9B96C" stroke-width="1" stroke-dasharray="3 3" opacity="0"/>
+      <circle id="hdot" r="4" fill="#D9B96C" stroke="#0F1114" stroke-width="2" opacity="0"/>
+      <g id="tip" opacity="0"><rect rx="6" fill="#252A33" stroke="#2E3440" width="98" height="34"/>
+      <text id="tipA" x="10" y="15" fill="#B8B4A9" font-size="10" font-family="ui-monospace,monospace"></text>
+      <text id="tipB" x="10" y="28" fill="#F2EFE8" font-size="12" font-weight="600"></text></g>
+      <rect x="${P.l}" y="${P.t}" width="${W-P.l-P.r}" height="${H-P.t-P.b}" fill="transparent" id="hit"/>`;
+  svg.innerHTML=g;
+  const hit=svg.querySelector("#hit"),xh=svg.querySelector("#xh"),hd=svg.querySelector("#hdot"),
+        tip=svg.querySelector("#tip"),tA=svg.querySelector("#tipA"),tB=svg.querySelector("#tipB");
+  function mv(e){
+    const r=svg.getBoundingClientRect(),cx=(e.touches?e.touches[0].clientX:e.clientX);
+    const mx=(cx-r.left)*(W/r.width);
+    const i=Math.max(0,Math.min(WEEKS.length-1,Math.round((mx-P.l)/xw)));
+    xh.setAttribute("x1",X(i));xh.setAttribute("x2",X(i));xh.setAttribute("opacity",1);
+    hd.setAttribute("cx",X(i));hd.setAttribute("cy",Y(WEEKS[i].v));hd.setAttribute("opacity",1);
+    const tx=Math.min(W-108,Math.max(6,X(i)-49));
+    tip.setAttribute("transform",`translate(${tx},${Math.max(4,Y(WEEKS[i].v)-46)})`);tip.setAttribute("opacity",1);
+    tA.textContent="Semana "+(i+1);tB.textContent=WEEKS[i].v+" respuestas";
+  }
+  function out(){[xh,hd,tip].forEach(x=>x.setAttribute("opacity",0));}
+  hit.addEventListener("mousemove",mv);hit.addEventListener("touchmove",mv,{passive:true});
+  hit.addEventListener("mouseleave",out);hit.addEventListener("touchend",out);
+})();
+
+/* ───────── Funnel ───────── */
+(function(){
+  const box=document.getElementById("funnel"),max=FUNNEL[0][1];
+  box.innerHTML=FUNNEL.map(([l,v])=>`<div class="frow"><span class="fl">${l}</span>
+    <div class="fbar"><i data-w="${(v/max*100).toFixed(1)}"></i></div>
+    <span class="fv">${v.toLocaleString("en-US")}</span></div>`).join("");
+  requestAnimationFrame(()=>requestAnimationFrame(()=>
+    box.querySelectorAll("i").forEach(i=>i.style.width=i.dataset.w+"%")));
+})();
+
+/* ───────── Bar chart secuencia ───────── */
+(function(){
+  const svg=document.getElementById("barChart"),W=560,H=190,P={t:18,r:14,b:30,l:38};
+  const data=[["Email 1",4.1],["Email 2",3.2],["Email 3",6.8]],max=8;
+  const bw=64,gap=(W-P.l-P.r-bw*3)/4;
+  const Y=v=>P.t+(H-P.t-P.b)*(1-v/max);
+  let g="";
+  [0,4,8].forEach(v=>{g+=`<line x1="${P.l}" x2="${W-P.r}" y1="${Y(v)}" y2="${Y(v)}" stroke="#232830"/>
+    <text x="${P.l-8}" y="${Y(v)+4}" fill="#7E7B72" font-size="10" text-anchor="end" font-family="ui-monospace,monospace">${v}%</text>`;});
+  data.forEach(([l,v],i)=>{
+    const x=P.l+gap+(bw+gap)*i,y=Y(v),h=Y(0)-y;
+    g+=`<path d="M${x},${y+4} q0,-4 4,-4 h${bw-8} q4,0 4,4 v${h-4} h-${bw} z" fill="${i===2?'#D9B96C':'#8a7745'}"/>
+        <text x="${x+bw/2}" y="${y-8}" fill="#F2EFE8" font-size="12" font-weight="600" text-anchor="middle">${v}%</text>
+        <text x="${x+bw/2}" y="${H-10}" fill="#B8B4A9" font-size="11" text-anchor="middle">${l}</text>`;
+  });
+  svg.innerHTML=g;
+})();
+
+/* ───────── Leads + filtros ───────── */
+const INDS=["Todos","Belleza","Moda","Hospitalidad","Bienes raíces","Agencia","Fitness"];
+let activeInd="Todos";
+const fbox=document.getElementById("filters");
+fbox.innerHTML=INDS.map(i=>`<button class="chip" aria-pressed="${i==='Todos'}" data-i="${i}">${i}</button>`).join("");
+fbox.addEventListener("click",e=>{
+  const b=e.target.closest(".chip");if(!b)return;
+  activeInd=b.dataset.i;
+  fbox.querySelectorAll(".chip").forEach(c=>c.setAttribute("aria-pressed",c===b));
+  renderLeads();
+});
+function initials(n){return n.split(" ").map(x=>x[0]).slice(0,2).join("");}
+function renderLeads(){
+  const list=LEADS.filter(l=>activeInd==="Todos"||l.ind===activeInd);
+  document.getElementById("leadList").innerHTML=list.map((l,i)=>`
+    <button class="lead" data-idx="${LEADS.indexOf(l)}">
+      <span class="avatar">${initials(l.n)}</span>
+      <span><span class="nm">${l.n}<span class="vtag">● verificado</span></span><br>
+        <span class="rl">${l.r}</span><br><span class="co">${l.c} · ${l.ind}</span></span>
+      <span class="score"><span class="sv">${l.s}</span><br><span class="sl">score</span></span>
+    </button>`).join("");
+  document.getElementById("leadCount").textContent=list.length;
+}
+renderLeads();
+
+/* ───────── Modal + generador de email ───────── */
+const overlay=document.getElementById("overlay"),mbody=document.getElementById("modalBody");
+document.getElementById("leadList").addEventListener("click",e=>{
+  const b=e.target.closest(".lead");if(!b)return;openLead(LEADS[+b.dataset.idx]);
+});
+document.getElementById("modalClose").addEventListener("click",()=>overlay.hidden=true);
+overlay.addEventListener("click",e=>{if(e.target===overlay)overlay.hidden=true;});
+
+function emailFor(l){
+  const first=l.n.split(" ")[0];
+  const ideas={
+    "Belleza":`a street-interview series on Rodeo asking people their #1 skincare struggle — then cutting to ${l.c.split(" ")[0]} as the answer. Raw, native, and it performs as an ad`,
+    "Moda":`stopping the best-dressed people in Beverly Hills, asking what they're wearing — and seeding ${l.c} pieces into the series`,
+    "Hospitalidad":`a "first bite reaction" street series filmed at your location — real guests, real reactions, cut for Reels`,
+    "Bienes raíces":`cinematic walkthrough films for your top listings — the kind buyers share, not slideshow tours`,
+    "Agencia":`white-label street-interview and product content for your clients — you brief, I shoot same-week in LA`,
+    "Fitness":`real street interviews asking people about their routine — with ${l.c.split(" ")[0]} woven in natively, shot for paid + organic`};
+  return {subject:`quick idea for ${l.c}`,body:
+`Hi ${first} —
+
+Saw that ${l.sig.toLowerCase().replace("publicó","you posted").replace("su ","your ")}. I'm a photographer/videographer based in Beverly Hills — I shoot street interviews and brand content that companies actually run as ads.
+
+One idea for ${l.c}: ${ideas[l.ind]||ideas["Agencia"]}.
+
+I can send 3 concepts + examples. Worth a 15-min call this week?
+
+Best,
+[Tu nombre]
+Beverly Hills · portfolio link`};
+}
+function openLead(l){
+  mbody.innerHTML=`
+    <div style="display:flex;gap:12px;align-items:center">
+      <span class="avatar" style="width:52px;height:52px;font-size:20px">${initials(l.n)}</span>
+      <div><div style="font-weight:700;font-size:17px">${l.n}</div>
+      <div style="font-size:13px;color:var(--txt-1)">${l.r} · ${l.c}</div></div>
+    </div>
+    <div class="mrow"><span>${l.ind}</span><span>Score ${l.s}/100</span><span style="color:var(--good)">Email verificado ✓</span></div>
+    <p style="font-size:13.5px;color:var(--txt-1);line-height:1.6"><b style="color:var(--gold)">Por qué es buen lead:</b> ${l.note}</p>
+    <p style="font-size:13px;color:var(--txt-1);margin-top:8px"><b style="color:var(--gold)">Señal detectada:</b> ${l.sig}</p>
+    <button class="gen-btn" id="genBtn">✦ Generar email personalizado con IA</button>
+    <div class="email-out" id="emailOut"><div class="meta" id="emailMeta"></div><div id="emailBody"></div></div>
+    <div class="ai-note" id="aiNote">La IA usó la señal detectada + su industria para escribir este email. En producción, cada uno de los 3,412 emails se genera así — único, en segundos.</div>`;
+  overlay.hidden=false;
+  document.getElementById("genBtn").addEventListener("click",function(){
+    this.disabled=true;this.textContent="Analizando el lead…";
+    const out=document.getElementById("emailOut"),bodyEl=document.getElementById("emailBody"),
+          meta=document.getElementById("emailMeta"),em=emailFor(l);
+    setTimeout(()=>{
+      this.textContent="Escribiendo…";out.classList.add("show");
+      meta.textContent="PARA: "+l.n.toLowerCase().replace(" ",".")+"@"+l.c.toLowerCase().replace(/[^a-z]/g,"")+".com · ASUNTO: "+em.subject;
+      let i=0;const txt=em.body;
+      bodyEl.innerHTML='<span id="tw"></span><span class="cursor"></span>';
+      const tw=document.getElementById("tw");
+      (function type(){
+        if(i<=txt.length){tw.textContent=txt.slice(0,i);i+=2;setTimeout(type,12);}
+        else{bodyEl.querySelector(".cursor").remove();
+          document.getElementById("aiNote").classList.add("show");
+          document.getElementById("genBtn").textContent="✓ Email listo — se envía con tu aprobación";}
+      })();
+    },900);
+  });
+}
+
+/* ───────── Secuencias ───────── */
+const sq=document.getElementById("seqList");
+sq.innerHTML=SEQ.map((s,i)=>`
+  <div class="step${i===0?" open":""}">
+    <button class="step-head" data-i="${i}" aria-expanded="${i===0}">
+      <span class="t"><span class="day">${s.day}</span><br><span class="nm">${s.name}</span></span>
+      <span class="step-stats">${s.stats}</span>
+    </button>
+    <div class="step-body">${s.body}</div>
+  </div>`).join("");
+sq.addEventListener("click",e=>{
+  const b=e.target.closest(".step-head");if(!b)return;
+  const st=b.parentElement,open=st.classList.contains("open");
+  sq.querySelectorAll(".step").forEach(x=>x.classList.remove("open"));
+  sq.querySelectorAll(".step-head").forEach(x=>x.setAttribute("aria-expanded","false"));
+  if(!open){st.classList.add("open");b.setAttribute("aria-expanded","true");}
+});
+
+/* ───────── Agente: feed en vivo ───────── */
+const feed=document.getElementById("feed");let evIdx=0,agentOn=true,timer=null;
+function fmtTime(){const d=new Date();return d.toLocaleTimeString("es-MX",{hour:"2-digit",minute:"2-digit",second:"2-digit"});}
+function pushEvent(){
+  if(!agentOn)return;
+  const [ic,txt]=EVENTS[evIdx%EVENTS.length];evIdx++;
+  const el=document.createElement("div");el.className="ev";
+  el.innerHTML=`<span class="ic">${ic}</span><span>${txt}<div class="tm">${fmtTime()}</div></span>`;
+  feed.prepend(el);
+  while(feed.children.length>8)feed.lastChild.remove();
+}
+pushEvent();pushEvent();pushEvent();
+timer=setInterval(pushEvent,2600);
+document.getElementById("agentSwitch").addEventListener("click",function(){
+  agentOn=!agentOn;this.setAttribute("aria-checked",agentOn);
+  document.getElementById("agentState").textContent=agentOn?"Agente activo — procesando":"Agente en pausa";
+  document.querySelector(".pulse").style.color=agentOn?"var(--good)":"var(--txt-2)";
+  document.querySelector(".pulse i").style.background=agentOn?"var(--good)":"var(--txt-2)";
+});
+
+/* ───────── Inbox ───────── */
+document.getElementById("inbox").innerHTML=INBOX.map(m=>`
+  <div class="msg">
+    <div class="from">${m.f}<small>${m.c}</small><span class="tag ${m.tag}">${m.tagTxt}</span></div>
+    <div class="body">${m.b}</div>
+    <div class="draft"><span class="dl">RESPUESTA REDACTADA POR EL AGENTE — LISTA PARA APROBAR</span>${m.d}</div>
+  </div>`).join("");
+</script>

@@ -1,0 +1,368 @@
+<title>Media Kit Vivo · Portal para Marcas</title>
+<style>
+  /* ── MEDIA KIT VIVO — identidad: galería editorial impresa.
+     Tema único deliberado: blanco galería cálido + tinta carbón + bronce. ── */
+  :root{
+    --paper:#FBFAF7; --paper-2:#F3F1EB; --paper-3:#EBE8DF;
+    --ink:#211E19; --ink-2:#5A564D; --ink-3:#8C877B;
+    --bronze:#8C6532; --bronze-deep:#6E4E24; --bronze-dim:rgba(140,101,50,.09);
+    --line:#DDD9CE; --good:#4E7A52;
+    --fd:"Didot","Bodoni MT",Georgia,serif;
+    --fb:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --fm:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+  body{background:var(--paper);color:var(--ink);font-family:var(--fb);font-size:15.5px;line-height:1.6}
+  ::selection{background:var(--bronze);color:var(--paper)}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+  button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--bronze);outline-offset:2px}
+  .wrap{max-width:960px;margin:0 auto;padding:0 20px 90px}
+
+  .eyebrow{font-family:var(--fm);font-size:10.5px;letter-spacing:.18em;color:var(--bronze);text-transform:uppercase}
+
+  /* ── hero ── */
+  .hero{padding:44px 0 30px;border-bottom:1px solid var(--line)}
+  .hero h1{font-family:var(--fd);font-weight:400;font-size:clamp(34px,7vw,56px);line-height:1.06;
+    letter-spacing:.01em;margin:14px 0 14px;text-wrap:balance}
+  .hero h1 em{font-style:italic;color:var(--bronze)}
+  .hero p{color:var(--ink-2);max-width:56ch;font-size:16px}
+  .hero-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1px;
+    background:var(--line);border:1px solid var(--line);margin-top:28px}
+  .hs{background:var(--paper);padding:16px 14px}
+  .hs .v{font-family:var(--fd);font-size:28px;font-variant-numeric:tabular-nums}
+  .hs .v em{font-style:normal;color:var(--bronze)}
+  .hs .l{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin-top:3px}
+
+  .sec{padding:38px 0 8px}
+  .sec h2{font-family:var(--fd);font-weight:400;font-size:clamp(24px,4.5vw,32px);margin:10px 0 8px;text-wrap:balance}
+  .sec .lead{color:var(--ink-2);max-width:58ch;margin-bottom:20px}
+
+  /* ── portafolio ── */
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+  .work{border:1px solid var(--line);background:var(--paper);transition:.2s}
+  .work:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(33,30,25,.08)}
+  .ph{height:190px;position:relative;overflow:hidden}
+  .ph::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 30% 25%,rgba(255,255,255,.16),transparent 55%)}
+  .ph.a{background:linear-gradient(150deg,#C8A468 0%,#8C6532 45%,#3A2C17 100%)}
+  .ph.b{background:linear-gradient(150deg,#9BA8B0 0%,#5A6B76 50%,#232E35 100%)}
+  .ph.c{background:linear-gradient(150deg,#C4938A 0%,#8A5348 50%,#33201C 100%)}
+  .ph.d{background:linear-gradient(150deg,#A8B096 0%,#6B7657 50%,#28301F 100%)}
+  .ph .tag{position:absolute;bottom:10px;left:10px;font-family:var(--fm);font-size:9.5px;letter-spacing:.12em;
+    color:rgba(251,250,247,.92);background:rgba(33,30,25,.45);padding:4px 9px;border-radius:3px}
+  .work .cap{padding:12px 14px}
+  .work .cap b{font-size:14px;display:block}
+  .work .cap span{font-size:12.5px;color:var(--ink-3)}
+
+  /* ── servicios ── */
+  .svc{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+  .sv{border:1px solid var(--line);background:var(--paper);padding:20px 18px}
+  .sv .n{font-family:var(--fm);font-size:10px;letter-spacing:.16em;color:var(--bronze)}
+  .sv h3{font-family:var(--fd);font-weight:400;font-size:20px;margin:8px 0 6px}
+  .sv p{font-size:13.5px;color:var(--ink-2)}
+  .sv .fr{margin-top:12px;font-size:13px;color:var(--ink)}
+  .sv .fr b{color:var(--bronze)}
+
+  /* ── generador ── */
+  .gen{background:var(--ink);color:var(--paper);margin:44px -20px 0;padding:42px 20px 46px}
+  .gen-in{max-width:920px;margin:0 auto}
+  .gen .eyebrow{color:#C8A468}
+  .gen h2{font-family:var(--fd);font-weight:400;font-size:clamp(26px,5vw,36px);margin:12px 0 8px;text-wrap:balance}
+  .gen .lead{color:#B5B0A4;max-width:58ch;margin-bottom:24px;font-size:15px}
+  .form{display:grid;gap:14px;grid-template-columns:1fr;max-width:560px}
+  @media(min-width:640px){.form{grid-template-columns:1fr 1fr}}
+  .field label{display:block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#8C877B;margin-bottom:7px}
+  .field select{width:100%;padding:12px 13px;background:#2C2822;border:1px solid #453F35;color:var(--paper);
+    font-size:14.5px;border-radius:8px;appearance:none;
+    background-image:url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7'%3E%3Cpath d='M1 1l4.5 4.5L10 1' stroke='%23C8A468' fill='none' stroke-width='1.6'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:right 13px center}
+  .field.full{grid-column:1/-1}
+  .slider-val{font-family:var(--fd);font-size:24px;color:#C8A468;font-variant-numeric:tabular-nums}
+  input[type=range]{width:100%;accent-color:#C8A468;margin-top:8px;height:26px}
+  .gen-btn{grid-column:1/-1;padding:15px;background:linear-gradient(90deg,#C8A468,#8C6532);color:#211E19;
+    font-weight:700;font-size:15px;border-radius:9px;transition:.15s;letter-spacing:.02em}
+  .gen-btn:disabled{opacity:.5;cursor:wait}
+
+  .prop{display:none;margin-top:26px;background:var(--paper);color:var(--ink);border-radius:4px;
+    padding:26px 22px;position:relative;box-shadow:0 24px 60px rgba(0,0,0,.35)}
+  .prop.show{display:block;animation:rise .5s ease}
+  @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1}}
+  .prop::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#C8A468,#8C6532)}
+  .prop .ph-eyebrow{font-family:var(--fm);font-size:10px;letter-spacing:.16em;color:var(--bronze)}
+  .prop h3{font-family:var(--fd);font-weight:400;font-size:24px;margin:8px 0 4px;text-wrap:balance}
+  .prop .sub{font-size:13px;color:var(--ink-3);margin-bottom:14px}
+  .prop-block{border-top:1px solid var(--line);padding:14px 0}
+  .prop-block .bt{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--bronze);margin-bottom:8px}
+  .prop-block p,.prop-block li{font-size:14px;color:var(--ink-2);line-height:1.65}
+  .prop-block ul{padding-left:19px}
+  .tiers{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));margin-top:6px}
+  .tier{border:1px solid var(--line);padding:14px;text-align:center}
+  .tier.mid{border-color:var(--bronze);background:var(--bronze-dim)}
+  .tier .tn{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+  .tier .tp{font-family:var(--fd);font-size:24px;margin:6px 0 2px;font-variant-numeric:tabular-nums}
+  .tier .td{font-size:11.5px;color:var(--ink-2)}
+  .tier .rec{display:inline-block;font-size:9px;letter-spacing:.1em;background:var(--bronze);color:var(--paper);
+    padding:2.5px 8px;border-radius:99px;margin-bottom:6px}
+  .typing{white-space:pre-wrap}
+  .cursor{display:inline-block;width:8px;height:15px;background:var(--bronze);vertical-align:-2px;animation:blink .8s steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+
+  /* ── ROI ── */
+  .roi-box{border:1px solid var(--line);background:var(--paper);padding:22px 20px;margin-top:8px}
+  .roi-grid{display:grid;gap:18px;grid-template-columns:1fr;margin-top:14px}
+  @media(min-width:700px){.roi-grid{grid-template-columns:1fr 1fr}}
+  .roi-l label{display:block;font-size:12px;color:var(--ink-2);margin:14px 0 4px}
+  .roi-l label b{color:var(--ink);font-variant-numeric:tabular-nums}
+  .roi-l input[type=range]{accent-color:var(--bronze)}
+  .roi-out{background:var(--paper-2);border:1px solid var(--line);padding:18px;display:grid;gap:12px;align-content:start}
+  .ro{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:13.5px;color:var(--ink-2)}
+  .ro b{font-family:var(--fd);font-size:22px;color:var(--ink);font-variant-numeric:tabular-nums;font-weight:400}
+  .ro.hl{border-top:1px solid var(--line);padding-top:12px}
+  .ro.hl b{color:var(--bronze);font-size:28px}
+
+  /* ── agenda ── */
+  .cal-row{display:flex;gap:9px;overflow-x:auto;padding:4px 0 10px;scrollbar-width:none}
+  .cal-row::-webkit-scrollbar{display:none}
+  .slot{flex:0 0 auto;border:1px solid var(--line);background:var(--paper);padding:12px 16px;text-align:center;
+    border-radius:10px;transition:.15s;min-width:86px}
+  .slot .d{font-family:var(--fm);font-size:10px;letter-spacing:.1em;color:var(--ink-3)}
+  .slot .n{font-family:var(--fd);font-size:23px;margin:2px 0}
+  .slot .s{font-size:10.5px;color:var(--good)}
+  .slot.full{opacity:.42}.slot.full .s{color:var(--ink-3)}
+  .slot[aria-pressed="true"]{border-color:var(--bronze);background:var(--bronze-dim)}
+  .book-btn{display:block;width:100%;max-width:420px;padding:15px;background:var(--ink);color:var(--paper);
+    font-weight:600;font-size:14.5px;border-radius:10px;margin-top:8px;transition:.15s}
+  .book-btn:hover{background:var(--bronze-deep)}
+  .book-ok{display:none;margin-top:12px;padding:13px 16px;background:rgba(78,122,82,.1);border:1px solid var(--good);
+    border-radius:10px;font-size:13.5px;color:var(--good)}
+  .book-ok.show{display:block}
+
+  footer{margin-top:48px;padding-top:18px;border-top:1px solid var(--line);font-size:12.5px;color:var(--ink-3);line-height:1.7}
+  footer b{color:var(--ink-2)}
+  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto}}
+</style>
+
+<div class="wrap">
+  <section class="hero">
+    <span class="eyebrow">Media Kit Vivo · Beverly Hills, CA</span>
+    <h1>Fotografía y video que las marcas <em>corren como ads.</em></h1>
+    <p>Street interviews, contenido de producto y campañas filmadas en las calles más reconocibles de Los Ángeles. Este portal genera una propuesta a la medida de tu marca — en 30 segundos, con inteligencia artificial.</p>
+    <div class="hero-stats">
+      <div class="hs"><div class="v">10<em>+</em></div><div class="l">años de oficio</div></div>
+      <div class="hs"><div class="v">200<em>+</em></div><div class="l">shoots entregados</div></div>
+      <div class="hs"><div class="v">48<em>h</em></div><div class="l">entrega de clips</div></div>
+      <div class="hs"><div class="v">4.9<em>★</em></div><div class="l">clientes</div></div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <span class="eyebrow">Portafolio</span>
+    <h2>El trabajo habla primero</h2>
+    <p class="lead">Selección de formatos — cada uno diseñado para verse nativo en el feed y funcionar como pauta.</p>
+    <div class="grid">
+      <div class="work"><div class="ph a"><span class="tag">STREET · RODEO DR</span></div>
+        <div class="cap"><b>Street Interviews</b><span>Serie “¿Cuánto cuesta tu outfit?” · 1.8M vistas org.</span></div></div>
+      <div class="work"><div class="ph b"><span class="tag">PRODUCTO · ESTUDIO</span></div>
+        <div class="cap"><b>Producto & Ecommerce</b><span>Campaña skincare · usada en Meta Ads</span></div></div>
+      <div class="work"><div class="ph c"><span class="tag">HOSPITALIDAD · WEHO</span></div>
+        <div class="cap"><b>Restaurantes & Venues</b><span>Apertura rooftop · cobertura completa</span></div></div>
+      <div class="work"><div class="ph d"><span class="tag">EVENTOS · BH</span></div>
+        <div class="cap"><b>Eventos & Celebridades</b><span>Red carpet + backstage · clientes privados</span></div></div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <span class="eyebrow">Servicios</span>
+    <h2>Tres maneras de trabajar juntos</h2>
+    <div class="svc">
+      <div class="sv"><span class="n">01 · CONTENIDO</span><h3>Street Series patrocinada</h3>
+        <p>Tu marca integrada de forma nativa en una serie de entrevistas de calle. Incluye derechos de pauta.</p>
+        <div class="fr">Desde <b>$2,500 USD</b> / campaña</div></div>
+      <div class="sv"><span class="n">02 · PRODUCCIÓN</span><h3>Shoot de producto o campaña</h3>
+        <p>Foto + video vertical de tu producto, locación o servicio. Entrega editada en 48 horas.</p>
+        <div class="fr">Desde <b>$1,800 USD</b> / día</div></div>
+      <div class="sv"><span class="n">03 · RETAINER</span><h3>Contenido mensual</h3>
+        <p>2 shoots al mes + clips editados y calendarizados. Tu equipo de contenido, sin nómina.</p>
+        <div class="fr">Desde <b>$4,000 USD</b> / mes</div></div>
+    </div>
+  </section>
+
+  <!-- ══ GENERADOR ══ -->
+  <section class="gen" id="generador">
+    <div class="gen-in">
+      <span class="eyebrow">✦ Propuesta instantánea con IA</span>
+      <h2>Dime quién es tu marca. La IA arma la campaña.</h2>
+      <p class="lead">Elige tu industria, objetivo y presupuesto — y en segundos tienes un concepto creativo, entregables y precios. Esto mismo le llega a cada marca que entra al portal: nadie se va sin una propuesta.</p>
+      <div class="form">
+        <div class="field"><label for="fInd">Industria</label>
+          <select id="fInd">
+            <option>Belleza / Skincare</option><option>Moda / Ropa</option>
+            <option>Restaurante / Hospitalidad</option><option>Bienes raíces</option>
+            <option>Fitness / Suplementos</option><option>Agencia (para un cliente)</option>
+          </select></div>
+        <div class="field"><label for="fGoal">Objetivo principal</label>
+          <select id="fGoal">
+            <option>Awareness — que me conozcan</option><option>Ventas — convertir con ads</option>
+            <option>UGC — contenido para pauta</option><option>Lanzamiento de producto</option>
+          </select></div>
+        <div class="field full"><label for="fBud">Presupuesto aproximado — <span class="slider-val" id="budVal">$4,000</span></label>
+          <input type="range" id="fBud" min="1500" max="12000" step="500" value="4000"></div>
+        <button class="gen-btn" id="propBtn">Generar mi propuesta ✦</button>
+      </div>
+
+      <div class="prop" id="prop">
+        <span class="ph-eyebrow">PROPUESTA GENERADA · VÁLIDA 14 DÍAS</span>
+        <h3 id="pTitle"></h3>
+        <div class="sub" id="pSub"></div>
+        <div class="prop-block"><div class="bt">Concepto creativo</div><p class="typing" id="pConcept"></p></div>
+        <div class="prop-block" id="pDelivWrap" style="display:none"><div class="bt">Entregables</div><ul id="pDeliv"></ul></div>
+        <div class="prop-block" id="pTierWrap" style="display:none"><div class="bt">Inversión</div><div class="tiers" id="pTiers"></div></div>
+        <div class="prop-block" id="pReachWrap" style="display:none"><div class="bt">Alcance estimado</div><p id="pReach"></p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ ROI ══ -->
+  <section class="sec">
+    <span class="eyebrow">Para el que decide con números</span>
+    <h2>Calculadora de retorno</h2>
+    <p class="lead">Mueve los controles y compara: contenido nativo de creador vs. producir con una agencia tradicional.</p>
+    <div class="roi-box"><div class="roi-grid">
+      <div class="roi-l">
+        <label>Inversión en la campaña — <b id="rInvV">$3,500</b></label>
+        <input type="range" id="rInv" min="1500" max="12000" step="500" value="3500">
+        <label>Clips entregados — <b id="rClipV">4</b></label>
+        <input type="range" id="rClip" min="2" max="12" step="1" value="4">
+        <label>Vistas promedio por clip — <b id="rViewV">120K</b></label>
+        <input type="range" id="rView" min="30000" max="500000" step="10000" value="120000">
+      </div>
+      <div class="roi-out">
+        <div class="ro"><span>Alcance total estimado</span><b id="oReach">480K</b></div>
+        <div class="ro"><span>Costo por 1,000 vistas (CPM)</span><b id="oCpm">$7.29</b></div>
+        <div class="ro"><span>CPM típico con agencia tradicional</span><b style="color:var(--ink-3)">$38+</b></div>
+        <div class="ro hl"><span>Ahorro vs. agencia</span><b id="oSave">81%</b></div>
+      </div>
+    </div></div>
+  </section>
+
+  <!-- ══ AGENDA ══ -->
+  <section class="sec">
+    <span class="eyebrow">Disponibilidad real</span>
+    <h2>Aparta tu fecha de shoot</h2>
+    <p class="lead">Octubre se está llenando. Elige un día disponible:</p>
+    <div class="cal-row" id="slots"></div>
+    <button class="book-btn" id="bookBtn">Solicitar esta fecha →</button>
+    <div class="book-ok" id="bookOk">✓ Solicitud enviada. Te llega confirmación + contrato por email en menos de 2 horas. (Demo — en producción esto se conecta a un calendario real.)</div>
+  </section>
+
+  <footer>
+    <b>Cómo funcionaría en producción:</b> este portal vive en tu dominio (tunombre.com). Cada marca que recibe tu email o tu DM aterriza aquí, juega con la propuesta IA, y agenda directo en tu calendario — vendes mientras duermes. La propuesta se genera con Claude usando tus precios y formatos reales.<br><br>
+    Demo construida por Joseph Mondragón · Sistemas de captación con IA
+  </footer>
+</div>
+
+<script>
+/* ── formato dinero ── */
+const $=id=>document.getElementById(id);
+const money=n=>"$"+n.toLocaleString("en-US");
+
+/* ── presupuesto slider ── */
+$("fBud").addEventListener("input",e=>$("budVal").textContent=money(+e.target.value));
+
+/* ── generador de propuestas ── */
+const CONCEPTS={
+ "Belleza / Skincare":{
+   t:"“La pregunta de los $200” — Street Series de belleza",
+   c:"Salimos a Rodeo Drive a preguntarle a la gente cuál es el producto de belleza más caro que ha comprado — y si valió la pena. En el corte final, tu producto aparece como el 'plot twist': se lo damos a probar en cámara y capturamos la reacción real. El formato ya probó hacer +1M de vistas orgánicas; tu marca vive dentro del contenido, no en un anuncio."},
+ "Moda / Ropa":{
+   t:"“Best Dressed BH” — Serie de estilo con tu marca",
+   c:"Paramos a las personas mejor vestidas de Beverly Hills y desglosamos su outfit. En cada episodio, una pieza de tu colección entra como 'el toque final' que el estilista (yo) sugiere en cámara. La audiencia descubre tu marca en el contexto más aspiracional posible: la calle más famosa de la moda en LA."},
+ "Restaurante / Hospitalidad":{
+   t:"“First Bite” — Reacciones reales en tu locación",
+   c:"Filmamos en tu restaurante con clientes reales: su primera reacción al platillo estrella, sin guion. Complemento con b-roll cinematográfico del lugar y del proceso en cocina. Los clips quedan listos para Reels y para que los corras como pauta local geo-segmentada — el formato con mejor conversión para restaurantes."},
+ "Bienes raíces":{
+   t:"Film de listado — la propiedad como protagonista",
+   c:"Nada de slideshows: un mini-film cinematográfico de tu propiedad con movimiento real, luz de golden hour y ritmo de tráiler. Versión de 60s para YouTube/web y cortes verticales de 15s para Reels. Los compradores comparten estos videos — tus listados se venden con la emoción, no con la ficha técnica."},
+ "Fitness / Suplementos":{
+   t:"“¿Cuál es tu rutina?” — Street Series fitness",
+   c:"Entrevistas afuera de los gyms más conocidos de LA: rutinas, hábitos y qué suplementos usan. Tu producto entra de forma nativa — se lo damos a probar a los entrevistados y capturamos la reacción. El material queda con derechos de pauta para que tu equipo lo corra en Meta y TikTok Ads."},
+ "Agencia (para un cliente)":{
+   t:"Producción white-label para tu cliente",
+   c:"Tú mandas el brief; yo ejecuto en LA la misma semana. Street interviews, producto o campaña — entregado con tu marca de agencia, sin que tengas que volar a nadie. Tarifas de freelance directo, calidad de productora. Ideal para agencias con clientes que piden 'contenido nativo' constantemente."}
+};
+const GOALS={
+ "Awareness — que me conozcan":"optimizado para alcance orgánico: hooks agresivos, subtítulos y formato compartible",
+ "Ventas — convertir con ads":"optimizado para conversión: incluye derechos de pauta (whitelisting) y 3 variantes de CTA por clip",
+ "UGC — contenido para pauta":"entregado como paquete UGC: crudos + editados, derechos completos por 90 días",
+ "Lanzamiento de producto":"calendarizado alrededor de tu fecha de lanzamiento: teaser, revelación y prueba social en secuencia"};
+
+$("propBtn").addEventListener("click",function(){
+  const ind=$("fInd").value,goal=$("fGoal").value,bud=+$("fBud").value;
+  this.disabled=true;this.textContent="La IA está armando tu campaña…";
+  const P=CONCEPTS[ind];
+  setTimeout(()=>{
+    this.textContent="✓ Propuesta lista — ajusta y regenera cuando quieras";this.disabled=false;
+    $("prop").classList.add("show");
+    $("pTitle").textContent=P.t;
+    $("pSub").textContent=ind+" · "+goal.split(" — ")[0]+" · presupuesto "+money(bud);
+    ["pDelivWrap","pTierWrap","pReachWrap"].forEach(id=>$(id).style.display="none");
+    /* typewriter del concepto */
+    const full=P.c+" Todo el material va "+GOALS[goal]+".";
+    const el=$("pConcept");el.innerHTML='<span id="tw"></span><span class="cursor"></span>';
+    const tw=document.getElementById("tw");let i=0;
+    (function type(){
+      if(i<=full.length){tw.textContent=full.slice(0,i);i+=3;setTimeout(type,11);}
+      else{el.querySelector(".cursor").remove();showRest(bud);}
+    })();
+    $("prop").scrollIntoView({behavior:"smooth",block:"start"});
+  },1100);
+});
+function showRest(bud){
+  const clips=Math.max(3,Math.round(bud/900)),photos=Math.round(clips*1.5);
+  $("pDeliv").innerHTML=[
+    clips+" clips verticales 9:16 editados con subtítulos (ES/EN)",
+    photos+" fotografías editadas de alta resolución",
+    "Hooks + captions por plataforma, escritos con IA",
+    "Derechos de uso en orgánico y pauta",
+    "Entrega en 48 horas post-shoot"].map(x=>`<li>${x}</li>`).join("");
+  $("pDelivWrap").style.display="block";
+  const base=Math.round(bud*.7/100)*100,mid=bud,top=Math.round(bud*1.6/100)*100;
+  $("pTiers").innerHTML=`
+    <div class="tier"><div class="tn">Esencial</div><div class="tp">${money(base)}</div><div class="td">${Math.max(2,clips-2)} clips · 1 locación</div></div>
+    <div class="tier mid"><span class="rec">RECOMENDADO</span><div class="tn">Campaña</div><div class="tp">${money(mid)}</div><div class="td">${clips} clips + ${photos} fotos · pauta incl.</div></div>
+    <div class="tier"><div class="tn">Full</div><div class="tp">${money(top)}</div><div class="td">${clips+3} clips · 2 días de shoot</div></div>`;
+  $("pTierWrap").style.display="block";
+  const reach=Math.round(clips*120);
+  $("pReach").innerHTML=`Con ${clips} clips en formato street-interview, el alcance orgánico estimado es de <b>${reach}K–${Math.round(reach*1.8)}K vistas</b> en 30 días, más lo que tu equipo amplifique con pauta. CPM efectivo estimado: <b>$${(bud/(reach*1000)*1000).toFixed(2)}</b> — contra $38+ de una producción tradicional.`;
+  $("pReachWrap").style.display="block";
+}
+
+/* ── ROI ── */
+function fmtK(n){return n>=1e6?(n/1e6).toFixed(1)+"M":Math.round(n/1e3)+"K";}
+function roi(){
+  const inv=+$("rInv").value,clips=+$("rClip").value,views=+$("rView").value;
+  $("rInvV").textContent=money(inv);$("rClipV").textContent=clips;$("rViewV").textContent=fmtK(views);
+  const reach=clips*views,cpm=inv/(reach/1000);
+  $("oReach").textContent=fmtK(reach);
+  $("oCpm").textContent="$"+cpm.toFixed(2);
+  $("oSave").textContent=Math.max(0,Math.round((1-cpm/38)*100))+"%";
+}
+["rInv","rClip","rView"].forEach(id=>$(id).addEventListener("input",roi));roi();
+
+/* ── agenda ── */
+const DAYS=[["MAR",7,true],["JUE",9,true],["VIE",10,false],["LUN",13,true],["MIÉ",15,true],["VIE",17,false],["MAR",21,true],["JUE",23,true],["LUN",27,true]];
+let selSlot=1;
+$("slots").innerHTML=DAYS.map(([d,n,free],i)=>`
+  <button class="slot${free?"":" full"}" ${free?`aria-pressed="${i===selSlot}"`:"disabled"} data-i="${i}">
+    <span class="d">OCT · ${d}</span><br><span class="n">${n}</span><br><span class="s">${free?"disponible":"ocupado"}</span>
+  </button>`).join("");
+$("slots").addEventListener("click",e=>{
+  const b=e.target.closest(".slot");if(!b||b.disabled)return;
+  selSlot=+b.dataset.i;
+  $("slots").querySelectorAll(".slot:not(.full)").forEach(s=>s.setAttribute("aria-pressed",s===b));
+});
+$("bookBtn").addEventListener("click",()=>{
+  $("bookOk").classList.add("show");
+  $("bookBtn").textContent="✓ Fecha solicitada — OCT "+DAYS[selSlot][1];
+});
+</script>
