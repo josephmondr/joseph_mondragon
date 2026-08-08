@@ -1,0 +1,336 @@
+<title>LeadFlow · AI Outreach Agent — Live Demo</title>
+<style>
+  /* ── LEADFLOW AGENT — one screen, one goal: a business owner on a call.
+     Deliberate single dark theme: warm charcoal + champagne gold. ── */
+  :root{
+    --ink-0:#0F1114; --ink-1:#15181D; --ink-2:#1C2027; --ink-3:#252A33;
+    --line:#2E3440; --line-soft:#232830;
+    --txt-0:#F2EFE8; --txt-1:#B8B4A9; --txt-2:#7E7B72;
+    --gold:#D9B96C; --gold-deep:#B08F45; --gold-dim:rgba(217,185,108,.13);
+    --good:#7FBF7F; --warn:#E0A458;
+    --fd:"Didot","Bodoni MT","Playfair Display",Georgia,serif;
+    --fb:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --fm:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{background:var(--ink-0);color:var(--txt-0);font-family:var(--fb);font-size:15px;line-height:1.55}
+  ::selection{background:var(--gold);color:var(--ink-0)}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+  button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 18px 80px}
+
+  header{padding:26px 0 6px;display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  h1{font-family:var(--fd);font-weight:400;font-size:clamp(26px,5vw,34px);letter-spacing:.4px}
+  h1 em{font-style:italic;color:var(--gold)}
+  .sub{color:var(--txt-1);font-size:13px;margin-top:3px}
+  .demo-chip{font-family:var(--fm);font-size:10.5px;letter-spacing:.14em;color:var(--gold);
+    border:1px solid var(--gold-deep);padding:5px 10px;border-radius:999px;white-space:nowrap}
+
+  /* ── the goal banner ── */
+  .goal{margin-top:18px;border:1px solid var(--gold-deep);background:linear-gradient(135deg,var(--gold-dim),rgba(217,185,108,.04));
+    border-radius:16px;padding:18px 20px}
+  .goal .k{font-family:var(--fm);font-size:10px;letter-spacing:.18em;color:var(--gold)}
+  .goal p{font-family:var(--fd);font-size:clamp(18px,3.6vw,23px);line-height:1.35;margin-top:6px;text-wrap:balance}
+  .goal p em{font-style:italic;color:var(--gold)}
+  .goal .s{font-size:13px;color:var(--txt-1);margin-top:6px;max-width:64ch}
+
+  .start{display:block;width:100%;margin-top:16px;padding:16px;border-radius:13px;
+    background:linear-gradient(90deg,var(--gold),var(--gold-deep));color:var(--ink-0);
+    font-weight:700;font-size:16px;letter-spacing:.01em;transition:.15s}
+  .start:disabled{opacity:.9;cursor:default}
+  .start.running{background:var(--ink-2);color:var(--good);border:1px solid var(--line)}
+
+  /* ── KPIs ── */
+  .kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:16px}
+  @media(min-width:720px){.kpis{grid-template-columns:repeat(5,1fr)}}
+  .kpi{background:var(--ink-1);border:1px solid var(--line-soft);border-radius:14px;padding:13px 15px;transition:.2s}
+  .kpi .l{font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--txt-2)}
+  .kpi .v{font-family:var(--fd);font-size:31px;margin-top:3px;font-variant-numeric:tabular-nums}
+  .kpi.hero{border-color:var(--gold-deep);background:linear-gradient(160deg,var(--ink-1),rgba(217,185,108,.07));grid-column:span 2}
+  @media(min-width:720px){.kpi.hero{grid-column:span 1}}
+  .kpi.hero .l{color:var(--gold)}
+  .kpi.hero .v{color:var(--gold);font-size:36px}
+  .kpi.bump{border-color:var(--gold)}
+  @keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.12)}100%{transform:scale(1)}}
+  .kpi .v.pop{animation:pop .4s ease}
+
+  /* ── layout ── */
+  .cols{display:grid;gap:14px;margin-top:16px;grid-template-columns:1fr}
+  @media(min-width:860px){.cols{grid-template-columns:1.15fr .85fr;align-items:start}}
+  .card{background:var(--ink-1);border:1px solid var(--line-soft);border-radius:16px;padding:17px}
+  .card h3{font-size:14px;font-weight:600;display:flex;align-items:center;gap:9px}
+  .card .hint{font-size:12px;color:var(--txt-2);margin-top:2px}
+  .pulse{width:9px;height:9px;border-radius:50%;background:var(--txt-2);flex:0 0 auto}
+  .pulse.on{background:var(--good);animation:pul 1.6s ease infinite}
+  @keyframes pul{0%,100%{box-shadow:0 0 0 0 rgba(127,191,127,.5)}55%{box-shadow:0 0 0 7px rgba(127,191,127,0)}}
+
+  /* ── feed ── */
+  .feed{margin-top:13px;display:grid;gap:8px;min-height:280px;max-height:460px;overflow-y:auto}
+  .empty{color:var(--txt-2);font-size:13px;padding:26px 8px;text-align:center}
+  .ev{display:grid;grid-template-columns:auto 1fr;gap:10px;background:var(--ink-2);border:1px solid var(--line-soft);
+    border-radius:12px;padding:11px 13px;font-size:13px;animation:slidein .35s ease}
+  @keyframes slidein{from{opacity:0;transform:translateY(-6px)}to{opacity:1}}
+  .ev .ic{font-size:15px}
+  .ev b{color:var(--txt-0)}
+  .ev{color:var(--txt-1)}
+  .ev .tm{font-family:var(--fm);font-size:10px;color:var(--txt-2);margin-top:3px}
+  .ev .sd{font-family:var(--fm);font-size:11px;color:var(--txt-2);margin-top:4px;border-left:2px solid var(--line);padding-left:9px}
+  .ev .sd i{font-style:normal;color:var(--gold)}
+  .ev.booked{border-color:var(--gold);background:linear-gradient(135deg,var(--ink-2),rgba(217,185,108,.1))}
+  .ev.booked .msg{color:var(--txt-0)}
+  .tag{display:inline-block;font-family:var(--fm);font-size:9.5px;letter-spacing:.08em;padding:2px 7px;border-radius:5px;margin-left:5px;vertical-align:1px}
+  .tag.int{background:rgba(127,191,127,.15);color:var(--good)}
+  .tag.later{background:rgba(224,164,88,.15);color:var(--warn)}
+  .tag.gold{background:var(--gold-dim);color:var(--gold)}
+
+  /* ── booked calls ── */
+  .calls-card{border-color:var(--gold-deep)}
+  .calls{margin-top:13px;display:grid;gap:9px}
+  .call{display:grid;grid-template-columns:46px 1fr auto;gap:12px;align-items:center;
+    background:var(--ink-2);border:1px solid var(--gold-deep);border-radius:13px;padding:12px 14px;
+    animation:bookin .5s cubic-bezier(.2,.9,.3,1.2)}
+  @keyframes bookin{from{opacity:0;transform:scale(.92) translateY(8px)}to{opacity:1}}
+  .call .av{width:46px;height:46px;border-radius:12px;display:grid;place-items:center;
+    font-family:var(--fd);font-size:17px;color:var(--ink-0);background:linear-gradient(135deg,var(--gold),var(--gold-deep))}
+  .call .nm{font-weight:600;font-size:14px}
+  .call .rl{font-size:11.5px;color:var(--gold)}
+  .call .co{font-size:11.5px;color:var(--txt-2)}
+  .call .when{text-align:right}
+  .call .when .d{font-family:var(--fm);font-size:11px;color:var(--txt-0)}
+  .call .when .c{font-size:10px;color:var(--good);margin-top:3px}
+  .slotline{margin-top:13px;font-size:12px;color:var(--txt-2);border-top:1px dashed var(--line-soft);padding-top:12px;line-height:1.6}
+  .slotline b{color:var(--txt-1)}
+
+  /* ── pipeline ── */
+  .pipe{display:grid;gap:8px;margin-top:13px}
+  .prow{display:grid;grid-template-columns:96px 1fr 46px;align-items:center;gap:10px;font-size:12.5px}
+  .prow .pl{color:var(--txt-1)} .prow .pv{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--fm);font-size:12px}
+  .pbar{height:16px;background:var(--ink-3);border-radius:5px;overflow:hidden}
+  .pbar i{display:block;height:100%;background:linear-gradient(90deg,var(--gold-deep),var(--gold));border-radius:5px;width:0;transition:width .6s ease}
+
+  /* ── summary ── */
+  .summary{display:none;margin-top:16px;border:1px solid var(--gold);border-radius:16px;
+    background:linear-gradient(135deg,var(--gold-dim),rgba(217,185,108,.04));padding:20px}
+  .summary.show{display:block;animation:slidein .5s ease}
+  .summary .k{font-family:var(--fm);font-size:10px;letter-spacing:.18em;color:var(--gold)}
+  .summary p{font-family:var(--fd);font-size:clamp(17px,3.4vw,22px);line-height:1.4;margin-top:7px;text-wrap:balance}
+  .summary p em{font-style:italic;color:var(--gold)}
+  .summary .s{font-size:13px;color:var(--txt-1);margin-top:8px}
+  .replay{margin-top:14px;padding:11px 18px;border:1px solid var(--gold-deep);border-radius:10px;color:var(--gold);font-weight:600;font-size:13.5px}
+  .replay:hover{background:var(--gold-dim)}
+
+  footer{margin-top:40px;padding-top:16px;border-top:1px solid var(--line-soft);font-size:12px;color:var(--txt-2);line-height:1.7}
+  footer b{color:var(--txt-1)}
+  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Lead<em>Flow</em></h1>
+      <div class="sub">AI outreach agent · Photography & video · Los Angeles</div>
+    </div>
+    <span class="demo-chip">LIVE DEMO</span>
+  </header>
+
+  <div class="goal">
+    <div class="k">THE ONLY METRIC THAT MATTERS</div>
+    <p>Everything this agent does has one goal: <em>a business owner, on a call, with you.</em></p>
+    <div class="s">Not likes. Not followers. Booked calls with people who can sign a check — spa owners, restaurant owners, brand founders. Press start and watch the agent work.</div>
+  </div>
+
+  <button class="start" id="startBtn">▶ &nbsp;Start the AI agent</button>
+
+  <div class="kpis">
+    <div class="kpi" id="k-leads"><div class="l">Leads found</div><div class="v">0</div></div>
+    <div class="kpi" id="k-sent"><div class="l">Emails sent</div><div class="v">0</div></div>
+    <div class="kpi" id="k-opens"><div class="l">Opened</div><div class="v">0</div></div>
+    <div class="kpi" id="k-replies"><div class="l">Replies</div><div class="v">0</div></div>
+    <div class="kpi hero" id="k-calls"><div class="l">★ Calls booked</div><div class="v">0</div></div>
+  </div>
+
+  <div class="cols">
+    <div class="card">
+      <h3><span class="pulse" id="pulse"></span>Agent activity — live</h3>
+      <p class="hint">Finding owners, writing each email one by one, reading every reply</p>
+      <div class="feed" id="feed"><div class="empty" id="feedEmpty">The agent is idle. Press “Start the AI agent” above.</div></div>
+    </div>
+
+    <div>
+      <div class="card calls-card">
+        <h3>📞 Calls booked — your calendar</h3>
+        <p class="hint">Business owners who said yes. Added to your calendar automatically.</p>
+        <div class="calls" id="calls"><div class="empty" id="callsEmpty">No calls yet — the agent is working on it.</div></div>
+        <div class="slotline" id="slotline" style="display:none"><b>You do nothing here.</b> The agent offers your open times, the owner picks one, and the invite lands on both calendars with a reminder.</div>
+      </div>
+
+      <div class="card" style="margin-top:14px">
+        <h3>Pipeline</h3>
+        <div class="pipe">
+          <div class="prow"><span class="pl">Leads found</span><div class="pbar"><i id="p-leads"></i></div><span class="pv" id="pv-leads">0</span></div>
+          <div class="prow"><span class="pl">Emails sent</span><div class="pbar"><i id="p-sent"></i></div><span class="pv" id="pv-sent">0</span></div>
+          <div class="prow"><span class="pl">Opened</span><div class="pbar"><i id="p-opens"></i></div><span class="pv" id="pv-opens">0</span></div>
+          <div class="prow"><span class="pl">Replied</span><div class="pbar"><i id="p-replies"></i></div><span class="pv" id="pv-replies">0</span></div>
+          <div class="prow"><span class="pl">Calls booked</span><div class="pbar"><i id="p-calls"></i></div><span class="pv" id="pv-calls">0</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="summary" id="summary">
+    <div class="k">END OF SIMULATION — ONE WEEK OF THE AGENT WORKING</div>
+    <p>5 business owners booked on your calendar. You didn't send a single email. <em>You just show up and close.</em></p>
+    <div class="s">In production this runs every day: fresh leads from Apollo, every email written 1-on-1 by AI, every reply answered in minutes, every yes turned into a calendar invite — while you're out shooting.</div>
+    <button class="replay" id="replayBtn">↻ Replay the simulation</button>
+  </div>
+
+  <footer>
+    <b>How this works in production:</b> Apollo.io finds the owners (name, business, verified email). Claude writes each email personally — referencing their actual business — and reads every reply. Your calendar connects so interested owners book straight into your open slots. Sent from your own domain with inbox warm-up so it never lands in spam. All data in this demo is simulated.<br><br>
+    Demo built by Joseph Mondragón · AI client-acquisition systems
+  </footer>
+</div>
+
+<script>
+/* ───────── timeline of the simulation ─────────
+   Each step: [delay_ms_after_previous, type, payload]
+   types: scan | verify | send | open | reply | book | note          */
+const OWNERS=[
+ {n:"Sofia Bennett",r:"Owner",c:"Bloom Med Spa · Beverly Hills",when:"Tue · 10:30 AM"},
+ {n:"David Park",r:"Owner",c:"Koa Fitness Studio · West Hollywood",when:"Wed · 2:00 PM"},
+ {n:"Isabella Romano",r:"Owner",c:"Romano's Trattoria · Melrose",when:"Thu · 11:15 AM"},
+ {n:"Marcus Hale",r:"Founder",c:"Hale Luxury Realty · Beverly Hills",when:"Fri · 9:00 AM"},
+ {n:"Amara Osei",r:"Owner",c:"Velvet Beauty Bar · Culver City",when:"Mon · 4:30 PM"},
+];
+const T=[
+ [600,"scan","Scanning Apollo: <b>med spas, restaurants, boutiques & gyms in LA</b> — owners only, 5–50 employees…"],
+ [1900,"scan","<b>14 owners found</b> with verified emails · scored by how likely they need photo/video right now"],
+ [1600,"verify","Top signal: <b>Bloom Med Spa</b> — just opened a 2nd location, Instagram has zero video"],
+ [1700,"send","Writing email 1 of 14 → <b>Sofia Bennett</b>, Owner, Bloom Med Spa",
+   "Subject: <i>quick idea for Bloom's new Beverly Hills location</i> — mentions her opening post from last week"],
+ [1500,"send","Email sent → <b>David Park</b>, Owner, Koa Fitness Studio",
+   "Subject: <i>content idea for Koa's January challenge</i> — references his member-growth goal"],
+ [1400,"send","Email sent → <b>Isabella Romano</b>, Owner, Romano's Trattoria",
+   "Subject: <i>your carbonara deserves a better camera</i> — references her 4.8★ reviews"],
+ [1300,"sendbatch","Emails sent to the remaining <b>11 owners</b> — each one written individually, no templates",11],
+ [2000,"open","<b>Sofia Bennett</b> opened your email — twice in 3 minutes"],
+ [1500,"open","<b>Marcus Hale</b> opened your email"],
+ [1800,"reply","Reply from <b>Sofia Bennett</b> <span class='tag int'>INTERESTED</span>",
+   "“This is good timing — we need content for the new location. How does next week look?”"],
+ [1700,"book","📞 <b>CALL BOOKED — Sofia Bennett</b>, Owner, Bloom Med Spa <span class='tag gold'>TUE 10:30 AM</span>",
+   "Agent offered your open slots → she picked Tuesday. Invite on both calendars.",0],
+ [2100,"open","<b>Isabella Romano</b> opened your email"],
+ [1500,"reply","Reply from <b>David Park</b> <span class='tag int'>INTERESTED</span>",
+   "“Been meaning to fix our content. What would something like this cost?”"],
+ [1600,"book","📞 <b>CALL BOOKED — David Park</b>, Owner, Koa Fitness Studio <span class='tag gold'>WED 2:00 PM</span>",
+   "Agent answered his pricing question and offered times. He took Wednesday.",1],
+ [1900,"scan","Day 3 · Scanning for new openings: <b>9 new owners</b> added — restaurants & beauty in WeHo"],
+ [1400,"sendbatch","Follow-up (day 3) sent to <b>8 owners</b> who didn't reply — new angle, not a nudge",8],
+ [1700,"reply","Reply from <b>Isabella Romano</b> <span class='tag int'>INTERESTED</span>",
+   "“Ha — okay, you got me. Can you come by Thursday morning?”"],
+ [1500,"book","📞 <b>CALL BOOKED — Isabella Romano</b>, Owner, Romano's Trattoria <span class='tag gold'>THU 11:15 AM</span>",
+   "She proposed Thursday — the agent confirmed against your calendar instantly.",2],
+ [1900,"reply","Reply from <b>Nadia Cole</b> (boutique owner) <span class='tag later'>NOT NOW</span>",
+   "Agent scheduled an automatic follow-up for March — with a fresh email, not the same one"],
+ [1600,"open","<b>Marcus Hale</b> opened your follow-up — 3rd open, high intent"],
+ [1500,"reply","Reply from <b>Marcus Hale</b> <span class='tag int'>INTERESTED</span>",
+   "“I have 6 listings that need film. Friday early?”"],
+ [1400,"book","📞 <b>CALL BOOKED — Marcus Hale</b>, Founder, Hale Luxury Realty <span class='tag gold'>FRI 9:00 AM</span>",
+   "Six listings on the table before you've even said hello.",3],
+ [1900,"sendbatch","Day 5 · Breakup email sent to <b>6 silent owners</b> — historically the highest-reply email",6],
+ [1700,"reply","Reply from <b>Amara Osei</b> <span class='tag int'>INTERESTED</span>",
+   "“Glad you followed up — launch got crazy. Monday works.”"],
+ [1500,"book","📞 <b>CALL BOOKED — Amara Osei</b>, Owner, Velvet Beauty Bar <span class='tag gold'>MON 4:30 PM</span>",
+   "The follow-up nobody likes sending is the one that booked this call.",4],
+ [1800,"note","Week complete · <b>5 owners on your calendar</b> · agent keeps running tomorrow"],
+];
+
+/* counter targets driven by events */
+const S={leads:0,sent:0,opens:0,replies:0,calls:0};
+const MAX={leads:23,sent:39,opens:0,replies:0,calls:0}; // for pipeline bars use leads as 100%
+
+const $=id=>document.getElementById(id);
+function setKpi(key,val,hero){
+  S[key]=val;
+  const kpi=$("k-"+key),v=kpi.querySelector(".v");
+  v.textContent=val;v.classList.remove("pop");void v.offsetWidth;v.classList.add("pop");
+  kpi.classList.add("bump");setTimeout(()=>kpi.classList.remove("bump"),600);
+  /* pipeline */
+  const base=Math.max(S.leads,1);
+  ["leads","sent","opens","replies","calls"].forEach(k=>{
+    $("p-"+k).style.width=Math.min(100,(S[k]/base*100)).toFixed(1)+"%";
+    $("pv-"+k).textContent=S[k];
+  });
+}
+function now(){return new Date().toLocaleTimeString("en-US",{hour:"2-digit",minute:"2-digit",second:"2-digit"});}
+function pushFeed(html,sub,booked){
+  const fe=$("feedEmpty");if(fe)fe.remove();
+  const el=document.createElement("div");
+  el.className="ev"+(booked?" booked":"");
+  el.innerHTML=`<span><span class="msg">${html}</span>${sub?`<div class="sd">${sub}</div>`:""}<div class="tm">${now()}</div></span>`;
+  el.style.gridTemplateColumns="1fr";
+  $("feed").prepend(el);
+  const f=$("feed");while(f.children.length>9)f.lastChild.remove();
+}
+function addCall(i){
+  const ce=$("callsEmpty");if(ce)ce.remove();
+  const o=OWNERS[i];
+  const el=document.createElement("div");el.className="call";
+  el.innerHTML=`<span class="av">${o.n.split(" ").map(x=>x[0]).join("")}</span>
+    <span><span class="nm">${o.n}</span><br><span class="rl">${o.r}</span> · <span class="co">${o.c}</span></span>
+    <span class="when"><span class="d">${o.when}</span><br><span class="c">✓ on your calendar</span></span>`;
+  $("calls").appendChild(el);
+  $("slotline").style.display="block";
+}
+
+const ICONS={scan:"🔎",verify:"✅",send:"✉️",sendbatch:"✉️",open:"👀",reply:"📬",note:"🗓️"};
+let running=false,timeouts=[];
+
+function run(){
+  if(running)return;running=true;
+  const btn=$("startBtn");
+  btn.disabled=true;btn.classList.add("running");btn.textContent="● Agent running — watch the feed";
+  $("pulse").classList.add("on");
+  $("summary").classList.remove("show");
+  let t=0;
+  T.forEach(step=>{
+    const [d,type,msg,sub,extra]=step;
+    t+=d;
+    timeouts.push(setTimeout(()=>{
+      if(type==="scan"){pushFeed("🔎 "+msg);
+        if(msg.includes("14"))setKpi("leads",14);
+        if(msg.includes("9 new"))setKpi("leads",23);}
+      else if(type==="verify"){pushFeed("✅ "+msg);}
+      else if(type==="send"){pushFeed("✉️ "+msg,sub);setKpi("sent",S.sent+1);}
+      else if(type==="sendbatch"){pushFeed("✉️ "+msg);setKpi("sent",S.sent+extra);}
+      else if(type==="open"){pushFeed("👀 "+msg);setKpi("opens",S.opens+1);}
+      else if(type==="reply"){pushFeed("📬 "+msg,sub);setKpi("replies",S.replies+1);}
+      else if(type==="book"){pushFeed(msg,sub,true);setKpi("calls",S.calls+1);addCall(extra);}
+      else if(type==="note"){pushFeed("🗓️ "+msg);finish();}
+    },t));
+  });
+}
+function finish(){
+  $("pulse").classList.remove("on");
+  $("summary").classList.add("show");
+  const btn=$("startBtn");
+  btn.textContent="✓ Simulation complete — 5 calls booked";
+  $("summary").scrollIntoView({behavior:"smooth",block:"center"});
+}
+function reset(){
+  timeouts.forEach(clearTimeout);timeouts=[];running=false;
+  Object.keys(S).forEach(k=>S[k]=0);
+  ["leads","sent","opens","replies","calls"].forEach(k=>{
+    $("k-"+k).querySelector(".v").textContent="0";
+    $("p-"+k).style.width="0";$("pv-"+k).textContent="0";});
+  $("feed").innerHTML='<div class="empty" id="feedEmpty">The agent is idle…</div>';
+  $("calls").innerHTML='<div class="empty" id="callsEmpty">No calls yet — the agent is working on it.</div>';
+  $("slotline").style.display="none";
+  $("summary").classList.remove("show");
+  const btn=$("startBtn");btn.disabled=false;btn.classList.remove("running");
+  btn.textContent="▶  Start the AI agent";
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+$("startBtn").addEventListener("click",run);
+$("replayBtn").addEventListener("click",()=>{reset();setTimeout(run,700);});
+</script>
