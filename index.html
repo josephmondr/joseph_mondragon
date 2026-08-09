@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Almaraz Inmobiliaria — Conectamos espacios, creamos hogares</title>
+<meta name="description" content="Almaraz Inmobiliaria. Hilario Almaraz Mtz., asesor inmobiliario. Remates inmobiliarios y desarrollos en Ciudad de México. Conectamos espacios, creamos hogares.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#152238;
+    --navy-soft:#1e3050;
+    --blue:#1565c0;
+    --red:#c62828;
+    --green:#2e7d32;
+    --gold:#b98a2f;
+    --ink:#232a35;
+    --muted:#5b6572;
+    --bg:#f7f8fa;
+    --card:#ffffff;
+    --line:#e4e8ee;
+    --radius:14px;
+    --shadow:0 10px 30px rgba(21,34,56,.10);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{font-family:'Inter',system-ui,-apple-system,sans-serif;color:var(--ink);background:var(--bg);line-height:1.65}
+  img{max-width:100%;display:block}
+  a{color:var(--blue);text-decoration:none}
+  h1,h2,h3,.brand-name{font-family:'Playfair Display',Georgia,serif}
+  .wrap{max-width:1100px;margin:0 auto;padding:0 22px}
+
+  /* ---------- Nav ---------- */
+  header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:70px}
+  .brand{display:flex;align-items:center;gap:12px;color:var(--navy)}
+  .brand img.logo-img{height:48px;width:auto}
+  .brand-name{font-size:1.25rem;font-weight:700;letter-spacing:.08em;color:var(--navy)}
+  .brand-name small{display:block;font-family:'Inter',sans-serif;font-size:.6rem;font-weight:600;letter-spacing:.35em;color:var(--muted);text-transform:uppercase}
+  nav.menu{display:flex;gap:26px}
+  nav.menu a{color:var(--ink);font-size:.9rem;font-weight:500}
+  nav.menu a:hover{color:var(--blue)}
+  .nav-cta{background:var(--green);color:#fff !important;padding:9px 18px;border-radius:999px;font-weight:600}
+  .nav-cta:hover{filter:brightness(1.08)}
+  @media(max-width:820px){nav.menu a:not(.nav-cta){display:none}}
+
+  /* ---------- Hero ---------- */
+  .hero{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-soft) 60%,#25406e 100%);color:#fff;overflow:hidden;position:relative}
+  .hero::after{content:"";position:absolute;right:-140px;top:-140px;width:480px;height:480px;border-radius:50%;border:70px solid rgba(255,255,255,.045)}
+  .hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:48px;align-items:center;padding:76px 0;position:relative;z-index:1}
+  .hero .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:.78rem;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:#cfe0f5;margin-bottom:18px}
+  .hero .eyebrow::before{content:"";width:26px;height:2px;background:var(--gold)}
+  .hero h1{font-size:clamp(2rem,4.6vw,3.2rem);line-height:1.15;font-weight:600;margin-bottom:18px}
+  .hero h1 em{font-style:normal;color:#e8c674}
+  .hero p.lead{font-size:1.06rem;color:#d7e0ec;max-width:34rem;margin-bottom:30px}
+  .btn{display:inline-block;padding:14px 28px;border-radius:999px;font-weight:600;font-size:.95rem;transition:.2s}
+  .btn-gold{background:var(--gold);color:#fff}
+  .btn-gold:hover{filter:brightness(1.1)}
+  .btn-outline{border:1.5px solid rgba(255,255,255,.5);color:#fff;margin-left:12px}
+  .btn-outline:hover{background:rgba(255,255,255,.1)}
+  .hero-photo{position:relative}
+  .hero-photo .frame{border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);border:4px solid rgba(255,255,255,.12);aspect-ratio:4/5;background:linear-gradient(160deg,#2c3e5d,#1a2740);display:flex;align-items:center;justify-content:center}
+  .hero-photo .frame img{width:100%;height:100%;object-fit:cover}
+  .ph-note{color:#9fb1c9;font-size:.85rem;text-align:center;padding:20px}
+  .hero-badge{position:absolute;bottom:-18px;left:-18px;background:#fff;color:var(--navy);border-radius:12px;box-shadow:var(--shadow);padding:12px 18px;font-size:.85rem;font-weight:600;display:flex;align-items:center;gap:10px}
+  .dot3{display:flex;gap:4px}
+  .dot3 span{width:10px;height:10px;border-radius:50%}
+  .dot3 span:nth-child(1){background:var(--blue)}
+  .dot3 span:nth-child(2){background:var(--red)}
+  .dot3 span:nth-child(3){background:var(--green)}
+  @media(max-width:820px){.hero-grid{grid-template-columns:1fr;padding:56px 0}.hero-photo{max-width:340px;margin:0 auto}}
+
+  /* ---------- Secciones ---------- */
+  section{padding:78px 0}
+  .sec-head{max-width:640px;margin-bottom:44px}
+  .sec-head .tag{display:inline-block;font-size:.72rem;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+  .sec-head h2{font-size:clamp(1.6rem,3.2vw,2.3rem);color:var(--navy);line-height:1.2;margin-bottom:12px}
+  .sec-head p{color:var(--muted)}
+
+  /* Sobre */
+  .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:44px;align-items:center}
+  .about-grid .text p{margin-bottom:16px;color:#39424e}
+  .chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+  .chip{background:#eef2f8;border:1px solid var(--line);color:var(--navy);font-size:.82rem;font-weight:600;padding:8px 15px;border-radius:999px}
+  .about-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:30px;border-top:4px solid var(--gold)}
+  .about-card h3{color:var(--navy);margin-bottom:14px;font-size:1.15rem}
+  .about-card ul{list-style:none}
+  .about-card li{padding:10px 0 10px 30px;position:relative;border-bottom:1px dashed var(--line);font-size:.94rem;color:#39424e}
+  .about-card li:last-child{border-bottom:none}
+  .about-card li::before{content:"✓";position:absolute;left:0;top:9px;width:20px;height:20px;border-radius:50%;background:var(--green);color:#fff;font-size:.7rem;display:flex;align-items:center;justify-content:center;font-weight:700}
+  @media(max-width:820px){.about-grid{grid-template-columns:1fr}}
+
+  /* Remates */
+  .remates{background:var(--navy);color:#fff}
+  .remates .sec-head h2{color:#fff}
+  .remates .sec-head p{color:#c3cedd}
+  .remates-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  .r-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:var(--radius);padding:28px}
+  .r-card .num{font-family:'Playfair Display',serif;font-size:2rem;color:#e8c674;margin-bottom:10px}
+  .r-card h3{font-size:1.08rem;margin-bottom:10px}
+  .r-card p{font-size:.9rem;color:#c3cedd}
+  .remates-banner{margin-top:38px;background:linear-gradient(120deg,var(--red),#8e1f1f);border-radius:var(--radius);padding:30px 34px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+  .remates-banner strong{font-size:1.15rem;font-family:'Playfair Display',serif}
+  .remates-banner p{color:#f3d9d9;font-size:.9rem}
+  .btn-white{background:#fff;color:var(--red)}
+  @media(max-width:820px){.remates-grid{grid-template-columns:1fr}}
+
+  /* Desarrollo */
+  .dev-grid{display:grid;grid-template-columns:1fr 1fr;gap:44px;align-items:center}
+  .dev-photo{border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);aspect-ratio:16/10;background:linear-gradient(160deg,#d9e4ee,#b8c9d9);display:flex;align-items:center;justify-content:center}
+  .dev-photo img{width:100%;height:100%;object-fit:cover}
+  .dev-photo .ph-note{color:#5b7186}
+  .amenities{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:22px 0 28px}
+  .am{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-size:.88rem;font-weight:500;color:var(--navy)}
+  .am span{font-size:1.15rem}
+  @media(max-width:820px){.dev-grid{grid-template-columns:1fr}}
+
+  /* Aliados */
+  .allies{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .allies-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  .ally{border:1px solid var(--line);border-radius:var(--radius);padding:28px;transition:.2s;background:var(--bg)}
+  .ally:hover{box-shadow:var(--shadow);transform:translateY(-3px)}
+  .ally .icon{width:52px;height:52px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin-bottom:16px;color:#fff}
+  .ally:nth-child(1) .icon{background:var(--green)}
+  .ally:nth-child(2) .icon{background:var(--blue)}
+  .ally:nth-child(3) .icon{background:var(--red)}
+  .ally h3{color:var(--navy);font-size:1.08rem;margin-bottom:8px}
+  .ally p{font-size:.9rem;color:var(--muted)}
+  .ally a{font-size:.88rem;font-weight:600;display:inline-block;margin-top:10px}
+  @media(max-width:820px){.allies-grid{grid-template-columns:1fr}}
+
+  /* Radio strip */
+  .radio-strip{background:linear-gradient(120deg,var(--navy-soft),var(--navy));color:#fff;padding:44px 0}
+  .radio-inner{display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+  .radio-inner .mic{font-size:2.4rem}
+  .radio-inner h3{font-size:1.3rem;margin-bottom:6px}
+  .radio-inner p{color:#c3cedd;font-size:.92rem;max-width:44rem}
+
+  /* Contacto */
+  .contact-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  .c-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:30px;text-align:center;box-shadow:var(--shadow)}
+  .c-card .icon{font-size:1.8rem;margin-bottom:12px}
+  .c-card h3{color:var(--navy);font-size:1.05rem;margin-bottom:6px}
+  .c-card p{font-size:.9rem;color:var(--muted);margin-bottom:14px}
+  .c-card .btn{padding:10px 22px;font-size:.88rem}
+  .btn-green{background:#25d366;color:#fff}
+  .btn-blue{background:var(--blue);color:#fff}
+  .btn-navy{background:var(--navy);color:#fff}
+  @media(max-width:820px){.contact-grid{grid-template-columns:1fr}}
+
+  footer{background:var(--navy);color:#8fa1b8;padding:34px 0;font-size:.85rem}
+  .foot{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+  .foot .dot3 span{width:8px;height:8px}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a class="brand" href="#inicio" aria-label="Almaraz Inmobiliaria">
+      <img class="logo-img" src="assets/logo.png" alt="Logo Almaraz Inmobiliaria" onerror="this.style.display='none'">
+      <span class="brand-name">ALMARAZ<small>Inmobiliaria</small></span>
+    </a>
+    <nav class="menu">
+      <a href="#sobre">Sobre él</a>
+      <a href="#remates">Remates</a>
+      <a href="#desarrollo">Desarrollo CDMX</a>
+      <a href="#aliados">Aliados</a>
+      <a class="nav-cta" href="#contacto">Contacto</a>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero" id="inicio">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow">Asesoría Inmobiliaria Profesional</span>
+      <h1>Conectamos espacios, <em>creamos hogares</em></h1>
+      <p class="lead">Soy <strong>Hilario Almaraz Mtz.</strong>, asesor inmobiliario con una amplia red de contactos y aliados profesionales. Te acompaño en todo el proceso: desde encontrar la oportunidad correcta hasta la escrituración de tu propiedad, con total seguridad jurídica.</p>
+      <a class="btn btn-gold" href="#contacto">Agenda una asesoría</a>
+      <a class="btn btn-outline" href="#remates">Ver oportunidades</a>
+    </div>
+    <div class="hero-photo">
+      <div class="frame">
+        <img src="assets/hilario.jpg" alt="Hilario Almaraz Mtz., asesor inmobiliario" onerror="this.style.display='none';this.parentElement.innerHTML='<p class=&quot;ph-note&quot;>Foto de Hilario Almaraz Mtz.</p>'">
+      </div>
+      <div class="hero-badge"><span class="dot3"><span></span><span></span><span></span></span> Hilario Almaraz Mtz.</div>
+    </div>
+  </div>
+</section>
+
+<!-- SOBRE -->
+<section id="sobre">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="tag">Sobre él</span>
+      <h2>Un asesor con trayectoria, red y respaldo</h2>
+      <p>Más que vender propiedades, construimos patrimonios con seguridad y acompañamiento profesional de principio a fin.</p>
+    </div>
+    <div class="about-grid">
+      <div class="text">
+        <p>Hilario Almaraz Mtz. es un asesor inmobiliario dedicado a formalizar y profesionalizar cada operación. A lo largo de su trayectoria ha construido una <strong>sólida red de contactos y alianzas</strong> con empresas, despachos de abogados, asesores financieros y notarías que respaldan cada compraventa.</p>
+        <p>Su experiencia incluye también participación en <strong>radio</strong>, donde ha compartido su visión del sector inmobiliario, lo que refleja su cercanía con la gente y su compromiso con informar y asesorar con claridad.</p>
+        <p>Hoy su enfoque está en dos grandes oportunidades: <strong>remates inmobiliarios</strong> con precios muy por debajo de mercado, y un <strong>desarrollo inmobiliario en la Ciudad de México</strong> con amenidades de primer nivel.</p>
+        <div class="chips">
+          <span class="chip">🏠 Compra-venta</span>
+          <span class="chip">⚖️ Respaldo jurídico</span>
+          <span class="chip">📋 Escrituración</span>
+          <span class="chip">💰 Asesoría financiera</span>
+          <span class="chip">🎙️ Experiencia en radio</span>
+        </div>
+      </div>
+      <div class="about-card">
+        <h3>¿Por qué trabajar con Almaraz Inmobiliaria?</h3>
+        <ul>
+          <li>Acompañamiento personalizado durante todo el proceso</li>
+          <li>Alianzas con abogados que cuidan cada detalle legal</li>
+          <li>Gestión completa de escrituración con notarías de confianza</li>
+          <li>Acceso a financiamiento a través de asesores especializados</li>
+          <li>Oportunidades exclusivas: remates y preventa de desarrollos</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REMATES -->
+<section class="remates" id="remates">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="tag">Oportunidad de inversión</span>
+      <h2>Remates inmobiliarios</h2>
+      <p>Propiedades adjudicadas con precios muy por debajo de su valor comercial. Una de las formas más inteligentes de invertir en bienes raíces — siempre con acompañamiento legal profesional.</p>
+    </div>
+    <div class="remates-grid">
+      <div class="r-card">
+        <div class="num">01</div>
+        <h3>Selección de la propiedad</h3>
+        <p>Analizamos juntos las opciones disponibles en remate y elegimos la que mejor se ajuste a tu presupuesto y objetivo: vivienda o inversión.</p>
+      </div>
+      <div class="r-card">
+        <div class="num">02</div>
+        <h3>Revisión jurídica completa</h3>
+        <p>Nuestro bufete jurídico aliado revisa el expediente y el estatus legal de la propiedad para que inviertas con total certeza.</p>
+      </div>
+      <div class="r-card">
+        <div class="num">03</div>
+        <h3>Adjudicación y escrituración</h3>
+        <p>Te acompañamos en todo el proceso hasta la entrega y escrituración de tu propiedad ante notario.</p>
+      </div>
+    </div>
+    <div class="remates-banner">
+      <div>
+        <strong>¿Quieres conocer los remates disponibles?</strong>
+        <p>Solicita el listado actualizado de propiedades en remate y agenda una asesoría sin costo.</p>
+      </div>
+      <a class="btn btn-white" href="#contacto">Solicitar listado</a>
+    </div>
+  </div>
+</section>
+
+<!-- DESARROLLO -->
+<section id="desarrollo">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="tag">Preventa</span>
+      <h2>Desarrollo en Ciudad de México</h2>
+      <p>Departamentos nuevos con amenidades de primer nivel, en una de las mejores zonas de la CDMX. Invierte en preventa y aprovecha la plusvalía.</p>
+    </div>
+    <div class="dev-grid">
+      <div class="dev-photo">
+        <img src="assets/desarrollo-alberca.jpg" alt="Amenidades del desarrollo: alberca y gimnasio" onerror="this.style.display='none';this.parentElement.innerHTML='<p class=&quot;ph-note&quot;>Render del desarrollo — alberca y gimnasio</p>'">
+      </div>
+      <div>
+        <h3 style="font-family:'Playfair Display',serif;color:var(--navy);font-size:1.35rem;margin-bottom:12px">Amenidades pensadas para tu estilo de vida</h3>
+        <p style="color:var(--muted);font-size:.95rem">Un desarrollo moderno que combina diseño, confort y ubicación. Ideal para vivir o como inversión patrimonial.</p>
+        <div class="amenities">
+          <div class="am"><span>🏊</span> Alberca techada</div>
+          <div class="am"><span>🏋️</span> Gimnasio equipado</div>
+          <div class="am"><span>🌇</span> Áreas comunes</div>
+          <div class="am"><span>📍</span> Ubicación en CDMX</div>
+        </div>
+        <a class="btn btn-gold" href="https://drive.google.com/file/d/19HkmV3ZDvVUc_tRZpQ7YoxaRwWFGYEUe/view" target="_blank" rel="noopener">📄 Descargar catálogo</a>
+        <a class="btn btn-navy" style="margin-left:10px" href="#contacto">Más información</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ALIADOS -->
+<section class="allies" id="aliados">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="tag">Red de aliados</span>
+      <h2>Empresas y profesionales que nos respaldan</h2>
+      <p>Cada operación está acompañada por especialistas en finanzas, derecho y escrituración.</p>
+    </div>
+    <div class="allies-grid">
+      <div class="ally">
+        <div class="icon">💼</div>
+        <h3>SOC Asesores</h3>
+        <p>Líderes en asesoría financiera. Te ayudan a encontrar el crédito hipotecario ideal para volver realidad tus sueños.</p>
+        <a href="https://socasesores.com" target="_blank" rel="noopener">socasesores.com →</a>
+      </div>
+      <div class="ally">
+        <div class="icon">⚖️</div>
+        <h3>Bufete jurídico</h3>
+        <p>Despacho de abogados aliado que revisa cada expediente, da certeza legal a las operaciones y gestiona los procesos de adjudicación.</p>
+      </div>
+      <div class="ally">
+        <div class="icon">📜</div>
+        <h3>Escrituración y notarías</h3>
+        <p>Gestión completa del proceso de escrituración con notarías de confianza, para que recibas tu propiedad con toda la seguridad jurídica.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RADIO -->
+<div class="radio-strip">
+  <div class="wrap radio-inner">
+    <div class="mic">🎙️</div>
+    <div>
+      <h3>Voz con experiencia en radio</h3>
+      <p>Hilario ha participado en radio compartiendo consejos y visión sobre el sector inmobiliario — comunicación clara y cercana, dentro y fuera del micrófono.</p>
+    </div>
+  </div>
+</div>
+
+<!-- CONTACTO -->
+<section id="contacto">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="tag">Contacto</span>
+      <h2>Hablemos de tu próxima propiedad</h2>
+      <p>Agenda una asesoría sin costo. Con gusto te compartimos listados de remates y el catálogo del desarrollo.</p>
+    </div>
+    <div class="contact-grid">
+      <div class="c-card">
+        <div class="icon">💬</div>
+        <h3>WhatsApp</h3>
+        <p>La forma más rápida de contactarnos. Respuesta el mismo día.</p>
+        <a class="btn btn-green" href="https://wa.me/521XXXXXXXXXX?text=Hola%2C%20me%20interesa%20informaci%C3%B3n%20de%20Almaraz%20Inmobiliaria" target="_blank" rel="noopener">Enviar mensaje</a>
+      </div>
+      <div class="c-card">
+        <div class="icon">📞</div>
+        <h3>Llamada</h3>
+        <p>¿Prefieres hablar directamente? Llámanos con confianza.</p>
+        <a class="btn btn-blue" href="tel:+521XXXXXXXXXX">Llamar ahora</a>
+      </div>
+      <div class="c-card">
+        <div class="icon">✉️</div>
+        <h3>Correo</h3>
+        <p>Escríbenos y te respondemos a la brevedad.</p>
+        <a class="btn btn-navy" href="mailto:contacto@ejemplo.com">Escribir correo</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot">
+    <div style="display:flex;align-items:center;gap:10px">
+      <span class="dot3"><span></span><span></span><span></span></span>
+      <span><strong style="color:#fff">Almaraz Inmobiliaria</strong> — Conectamos espacios, creamos hogares</span>
+    </div>
+    <span>© 2026 Almaraz Inmobiliaria. Todos los derechos reservados.</span>
+  </div>
+</footer>
+
+</body>
+</html>
