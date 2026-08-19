@@ -1,4 +1,6 @@
-Coloca aquí las imágenes del sitio:
-- logo.png  (logo de Almaraz Inmobiliaria)
-- hilario.jpg  (foto de Hilario Almaraz Mtz.)
-- desarrollo-alberca.jpg  (render del desarrollo en CDMX)
+Coloca aquí las imágenes del sitio (la página las toma automáticamente):
+- logo.png            (logo Almaraz Inmobiliaria)
+- hilario.jpg         (retrato profesional de Hilario)
+- origina-santafe.jpg (foto/render Origina Santa Fe)
+- origina-pedregal.jpg(foto/render Origina Pedregal)
+- mm.jpg              (foto/render Desarrollos M&M)
