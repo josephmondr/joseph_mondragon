@@ -1,0 +1,29 @@
+name: Deploy to Vercel
+
+on:
+  push:
+    branches: [claude/shareable-webpage-m2vbej]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Stage site files
+        run: |
+          mkdir -p /tmp/almaraz-inmobiliaria
+          cp -r index.html assets /tmp/almaraz-inmobiliaria/
+
+      - name: Deploy to Vercel
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          if [ -z "$VERCEL_TOKEN" ]; then
+            echo "::error::Falta configurar el secret VERCEL_TOKEN en Settings > Secrets and variables > Actions"
+            exit 1
+          fi
+          npm install -g vercel
+          cd /tmp/almaraz-inmobiliaria
+          vercel deploy --prod --yes --token "$VERCEL_TOKEN"
