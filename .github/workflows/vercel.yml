@@ -24,6 +24,7 @@ jobs:
             echo "::error::Falta configurar el secret VERCEL_TOKEN en Settings > Secrets and variables > Actions"
             exit 1
           fi
+          VERCEL_TOKEN="$(printf '%s' "$VERCEL_TOKEN" | tr -d '[:space:]')"
           npm install -g vercel
           cd /tmp/almaraz-inmobiliaria
           vercel deploy --prod --yes --token "$VERCEL_TOKEN"
