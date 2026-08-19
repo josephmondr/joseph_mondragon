@@ -166,6 +166,28 @@
   .proj.flip .visual{order:2}
   @media(max-width:880px){.proj{grid-template-columns:1fr;gap:26px}.proj.flip .visual{order:0}}
 
+  /* M&M subsection */
+  .mm-head{padding:64px 0 8px;border-top:1px solid var(--line)}
+  .mm-head .sub{font-size:.8rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:10px}
+  .mm-head h3{font-size:1.9rem;color:var(--navy);font-weight:500;margin-bottom:10px}
+  .mm-head p{color:var(--slate);font-weight:300;max-width:640px}
+  .mm-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;padding:34px 0 60px}
+  .mm-card{background:var(--ivory);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;transition:.25s;display:flex;flex-direction:column}
+  .mm-card:hover{box-shadow:var(--shadow);transform:translateY(-4px)}
+  .mm-top{padding:26px 28px 20px;color:#fff;position:relative;min-height:118px;display:flex;flex-direction:column;justify-content:flex-end}
+  .mm-top .zona{font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;font-weight:600;opacity:.85;margin-bottom:4px}
+  .mm-top h4{font-family:'Playfair Display',serif;font-size:1.45rem;font-weight:500}
+  .mm-top .st{position:absolute;top:16px;right:16px;background:rgba(255,255,255,.92);color:var(--navy);font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;border-radius:999px}
+  .g1{background:linear-gradient(140deg,#1d3b2a,#3f6d4c)}
+  .g2{background:linear-gradient(140deg,#1d2f4e,#41618f)}
+  .g3{background:linear-gradient(140deg,#4a2b12,#8a6a3d)}
+  .g4{background:linear-gradient(140deg,#2b2140,#5c4a8a)}
+  .g5{background:linear-gradient(140deg,#3a1520,#7a3a4d)}
+  .mm-body{padding:22px 28px 26px;display:flex;flex-direction:column;gap:16px;flex:1}
+  .mm-body .specs{margin:0;gap:8px 18px}
+  .mm-acts{display:flex;gap:10px;flex-wrap:wrap;margin-top:auto}
+  @media(max-width:880px){.mm-grid{grid-template-columns:1fr}}
+
   /* ============ ALIANZAS ============ */
   .allies-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
   .ally{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:34px 30px;transition:.25s}
@@ -388,27 +410,123 @@
     </div>
 
     <!-- DESARROLLOS M&M -->
-    <div class="proj rv">
-      <div class="visual">
-        <div class="bg v-mm">
-          <svg class="skyline" width="340" height="180" viewBox="0 0 340 180" fill="#fff"><rect x="15" y="50" width="55" height="130"/><rect x="80" y="90" width="40" height="90"/><rect x="130" y="25" width="60" height="155"/><rect x="200" y="70" width="45" height="110"/><rect x="255" y="45" width="55" height="135"/></svg>
+    <div class="mm-head rv" id="mm">
+      <div class="sub">Portafolio · Desarrollos M&amp;M</div>
+      <h3>Desarrollos M&amp;M</h3>
+      <p>Cinco desarrollos con ubicaciones estratégicas en CDMX y zona poniente. Cada uno con catálogo completo de plantas, precios y disponibilidad.</p>
+    </div>
+    <div class="mm-grid">
+
+      <div class="mm-card rv">
+        <div class="mm-top g1">
+          <span class="st">Preventa · Entrega 2027</span>
+          <div class="zona">Club de Golf Los Encinos · a 25 min de Santa Fe</div>
+          <h4>Ántica Los Encinos</h4>
         </div>
-        <img src="assets/mm.jpg" alt="Desarrollos M&M" onerror="this.remove()">
-        <span class="badge">Catálogos disponibles</span>
-      </div>
-      <div>
-        <div class="sub">Desarrollos M&amp;M · CDMX</div>
-        <h3>Desarrollos M&amp;M</h3>
-        <p class="desc">Portafolio de desarrollos en la Ciudad de México con excelentes ubicaciones y amenidades. Consulta los catálogos completos con plantas, precios y disponibilidad, o solicita una asesoría personalizada.</p>
-        <div class="acts">
-          <a class="btn btn-sm btn-gold" href="https://wa.me/5215520736477?text=Hola%20Hilario%2C%20me%20interesan%20los%20Desarrollos%20M%26M." target="_blank" rel="noopener">Me interesa</a>
-          <a class="btn btn-sm btn-line" href="https://drive.google.com/drive/folders/107ilC4LJmdQlT3GwXYh2J1W0cE4j3Oo-" target="_blank" rel="noopener">📁 Catálogo 1</a>
-          <a class="btn btn-sm btn-line" href="https://drive.google.com/drive/folders/1KRzzXeK66bfJgE2wxuBtLuh21yYABeSB" target="_blank" rel="noopener">📁 Catálogo 2</a>
-          <a class="btn btn-sm btn-line" href="https://drive.google.com/drive/folders/1K_Wgr-mAvpo6Mfov3YdFLbTgSPILkx4H" target="_blank" rel="noopener">📁 Catálogo 3</a>
-          <a class="btn btn-sm btn-line" href="https://drive.google.com/drive/folders/1QKMUf1CHftpXm1kUJrqBrJZ26KRHvA--" target="_blank" rel="noopener">📁 Catálogo 4</a>
-          <a class="btn btn-sm btn-line" href="https://drive.google.com/drive/folders/1XUsSbM0JQNDV9fXUNZ_dmJ9YzoA87mi8" target="_blank" rel="noopener">📁 Catálogo 5</a>
+        <div class="mm-body">
+          <div class="specs">
+            <span class="spec">3 torres · 240 departamentos</span>
+            <span class="spec">Diseño de Artigas Arquitectos</span>
+            <span class="spec">20,000 m² de áreas verdes</span>
+            <span class="spec">Desde 112 m² · 2 recámaras</span>
+            <span class="spec">Alberca, spa, gym y paddle</span>
+            <span class="spec">Pet park, coworking y jogging track</span>
+          </div>
+          <div class="mm-acts">
+            <a class="btn btn-sm btn-gold" href="https://wa.me/5215520736477?text=Hola%20Hilario%2C%20me%20interesa%20%C3%81ntica%20Los%20Encinos." target="_blank" rel="noopener">Me interesa</a>
+            <a class="btn btn-sm btn-line" href="https://drive.google.com/drive/folders/107ilC4LJmdQlT3GwXYh2J1W0cE4j3Oo-" target="_blank" rel="noopener">📁 Catálogo</a>
+          </div>
         </div>
       </div>
+
+      <div class="mm-card rv">
+        <div class="mm-top g2">
+          <span class="st">Preventa</span>
+          <div class="zona">Interlomas · a 10 min de Santa Fe</div>
+          <h4>Forus Interlomas</h4>
+        </div>
+        <div class="mm-body">
+          <div class="specs">
+            <span class="spec">3 torres · 252 departamentos</span>
+            <span class="spec">De 109 a 149 m² + terraza</span>
+            <span class="spec">2 y 3 recámaras</span>
+            <span class="spec">6,500 m² de áreas verdes</span>
+            <span class="spec">Alberca, spa, gym y yoga garden</span>
+            <span class="spec">Pet park con guardería y coworking</span>
+          </div>
+          <div class="mm-acts">
+            <a class="btn btn-sm btn-gold" href="https://wa.me/5215520736477?text=Hola%20Hilario%2C%20me%20interesa%20Forus%20Interlomas." target="_blank" rel="noopener">Me interesa</a>
+            <a class="btn btn-sm btn-line" href="https://drive.google.com/drive/folders/1KRzzXeK66bfJgE2wxuBtLuh21yYABeSB" target="_blank" rel="noopener">📁 Catálogo</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="mm-card rv">
+        <div class="mm-top g3">
+          <span class="st">Preventa</span>
+          <div class="zona">Col. Arenal · Azcapotzalco, CDMX</div>
+          <h4>Punto Azcapotzalco</h4>
+        </div>
+        <div class="mm-body">
+          <div class="specs">
+            <span class="spec">2 torres de 20 niveles</span>
+            <span class="spec">412 departamentos</span>
+            <span class="spec">2 y 3 recámaras</span>
+            <span class="spec">Amenidades para trabajar y ejercitarte</span>
+            <span class="spec">Conexión a Metrobús y Circuito Interior</span>
+            <span class="spec">Zona de alta plusvalía en crecimiento</span>
+          </div>
+          <div class="mm-acts">
+            <a class="btn btn-sm btn-gold" href="https://wa.me/5215520736477?text=Hola%20Hilario%2C%20me%20interesa%20Punto%20Azcapotzalco." target="_blank" rel="noopener">Me interesa</a>
+            <a class="btn btn-sm btn-line" href="https://drive.google.com/drive/folders/1K_Wgr-mAvpo6Mfov3YdFLbTgSPILkx4H" target="_blank" rel="noopener">📁 Catálogo</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="mm-card rv">
+        <div class="mm-top g4">
+          <span class="st">Preventa</span>
+          <div class="zona">San Pedro de los Pinos · Álvaro Obregón</div>
+          <h4>Punto Cero</h4>
+        </div>
+        <div class="mm-body">
+          <div class="specs">
+            <span class="spec">2 torres de 26 niveles</span>
+            <span class="spec">Departamentos de 52 a 101 m²</span>
+            <span class="spec">1, 2 y 3 recámaras</span>
+            <span class="spec">A 500 m del Periférico</span>
+            <span class="spec">Planta baja completa de amenidades</span>
+            <span class="spec">Acabados contemporáneos</span>
+          </div>
+          <div class="mm-acts">
+            <a class="btn btn-sm btn-gold" href="https://wa.me/5215520736477?text=Hola%20Hilario%2C%20me%20interesa%20Punto%20Cero." target="_blank" rel="noopener">Me interesa</a>
+            <a class="btn btn-sm btn-line" href="https://drive.google.com/drive/folders/1QKMUf1CHftpXm1kUJrqBrJZ26KRHvA--" target="_blank" rel="noopener">📁 Catálogo</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="mm-card rv">
+        <div class="mm-top g5">
+          <span class="st">Residencial de lujo</span>
+          <div class="zona">Lomas de Chapultepec · a 5 min de Polanco</div>
+          <h4>Sierra Mojada 626</h4>
+        </div>
+        <div class="mm-body">
+          <div class="specs">
+            <span class="spec">Solo 20 residencias exclusivas</span>
+            <span class="spec">De 191 a 236 m²</span>
+            <span class="spec">2 y 3 recámaras con terraza</span>
+            <span class="spec">Diseño contemporáneo y bienestar</span>
+            <span class="spec">Acceso a Palmas, Reforma y Periférico</span>
+            <span class="spec">La zona más exclusiva de CDMX</span>
+          </div>
+          <div class="mm-acts">
+            <a class="btn btn-sm btn-gold" href="https://wa.me/5215520736477?text=Hola%20Hilario%2C%20me%20interesa%20Sierra%20Mojada%20626." target="_blank" rel="noopener">Me interesa</a>
+            <a class="btn btn-sm btn-line" href="https://drive.google.com/drive/folders/1XUsSbM0JQNDV9fXUNZ_dmJ9YzoA87mi8" target="_blank" rel="noopener">📁 Catálogo</a>
+          </div>
+        </div>
+      </div>
+
     </div>
 
     <!-- REMATES -->
